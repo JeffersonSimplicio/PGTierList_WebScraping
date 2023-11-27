@@ -78,3 +78,18 @@ class PokeInfoScraping:
         )
         y = [type_.string for type_ in list_types]
         return y
+
+    def run(self):
+        return self.attacks_types_dict()
+
+
+if __name__ == "__main__":
+    GAMEPRESS_LINK = "https://gamepress.gg"
+    POKE_INFO_LINK = "/pokemongo/pokemon/384-mega"
+    # POKE_INFO_LINK = "/pokemongo/pokemon/373-shadow"
+    # POKE_INFO_LINK = "/pokemongo/pokemon/142-shadow"
+    # POKE_INFO_LINK = "/pokemongo/pokemon/465-shadow"
+
+    xyz = PokeInfoScraping(GAMEPRESS_LINK+POKE_INFO_LINK)
+    a = xyz.run()
+    print(a)
