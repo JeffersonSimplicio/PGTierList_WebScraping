@@ -24,6 +24,7 @@ class Pokémon:
         # specific cases
         self._is_genesect = "genesect" in self.api_name
         self._is_zacian = "zacian" in self.api_name
+        self._is_hoopa = "hoopa" in self.api_name
 
     def _poke_api_generate(self) -> str:
         # common cases
@@ -75,3 +76,10 @@ class Pokémon:
                 self.api_name = "zacian-crowned"
             else:
                 self.api_name = "zacian"
+
+    def _if_hoopa(self) -> None:
+        if self._is_hoopa:
+            if "unbound" in self.api_name.lower():
+                self.api_name = "hoopa-unbound"
+            else:
+                self.api_name = "hoopa"
