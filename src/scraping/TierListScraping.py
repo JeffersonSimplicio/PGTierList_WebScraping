@@ -12,3 +12,7 @@ class TierListScraping:
 
     def prettify(self) -> str:
         return self._soup.prettify()
+
+    def number_pokemon(self) -> int:
+        list_pokes = self._soup.find_all("div", class_="tier-list-cell")
+        return len(list_pokes)
