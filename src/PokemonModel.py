@@ -51,6 +51,20 @@ class Pokémon:
             "}"
         )
 
+    def generate(self) -> dict[str, any]:
+        return {
+            "name": self.name,
+            "poke_api": self._poke_api_generate(),
+            "quick_attack": self.quick_attack,
+            "charged_attack": self.charged_attack,
+            "types": self.types,
+            "is_shadow": "shadow" in self.name.lower(),
+            "is_mega_or_primal": (
+                "mega" in self.name.lower() or
+                "primal" in self.name.lower()
+            )
+        }
+
     def _poke_api_generate(self) -> str:
         # common cases
         self._if_case(self._is_shadow, "shadow", "")
