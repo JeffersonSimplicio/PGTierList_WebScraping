@@ -33,3 +33,27 @@ class PokeInfoScraping:
             td_set.append(td)
 
         return td_set
+
+    def attacks_types_dict(self) -> dict[str, list[str]]:
+        td_set = self.a_level_lines()
+        type_attack_list = {}
+
+        for column in td_set:
+            attacks = []
+            for cell in column:
+                attack = cell.find("div", class_="move-name").string.strip()
+                attacks.append(attack)
+
+            type_ = column[1]\
+                .find("img")\
+                .get("src")\
+                .split('_')[0]\
+                .split('/')[-1]\
+                .lower()
+
+            if type_ not in type_attack_list:
+                type_attack_list[type_] = [attacks]
+            else:
+                type_attack_list[type_].append(attacks)
+
+        return type_attack_list
