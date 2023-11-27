@@ -17,6 +17,10 @@ class Pokémon:
         self._is_galar = "galar" in self.api_name
         self._is_hisui = "hisui" in self.api_name
         self._is_forme = "form" in self.api_name
+        self._is_x_or_y = (
+            len(self.name.split()) == 3 and
+            self.name.split()[2] in "xy"
+        )
 
     def _poke_api_generate(self) -> str:
         # common cases
@@ -42,3 +46,8 @@ class Pokémon:
                 .replace("forme", "")\
                 .replace("form", "")\
                 .strip()
+
+    def _if_x_or_y(self) -> None:
+        if self._is_x_or_y:
+            list_name = self.api_name.split()
+            self.api_name = f"{list_name[1]}-{list_name[0]}-{list_name[2]}"
