@@ -13,3 +13,6 @@ class PokeRankingJSON:
         self.tier_list = TierListScraping(
             self.GAMEPRESS_LINK+self.tier_list_link
         )
+
+    def number_pokemon(self):
+        return self.tier_list.number_pokemon()
