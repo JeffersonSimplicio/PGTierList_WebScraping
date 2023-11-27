@@ -16,3 +16,8 @@ class TierListScraping:
     def number_pokemon(self) -> int:
         list_pokes = self._soup.find_all("div", class_="tier-list-cell")
         return len(list_pokes)
+
+    def divs_tier(self):
+        tiers = self._soup.find_all("div", class_="gp-tier-container")
+        divs_lists = [tier.parent.parent for tier in tiers]
+        return divs_lists
