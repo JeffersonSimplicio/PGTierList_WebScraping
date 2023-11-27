@@ -9,3 +9,6 @@ class TierListScraping:
         page = requests.get(self._GAMEPRESS_LINK)
         html_content = page.text
         self._soup = BeautifulSoup(html_content, "html.parser")
+
+    def prettify(self) -> str:
+        return self._soup.prettify()
