@@ -50,3 +50,14 @@ class TierListScraping:
                 tmp.append(poke_data)
             dict_ranking.update({value: tmp})
         return dict_ranking
+
+    def run(self):
+        return self.pokemon_by_ranking()
+
+
+if __name__ == "__main__":
+    GAMEPRESS_LINK = "https://gamepress.gg"
+    TIER_LIST_LINK = "/pokemongo/attackers-tier-list#topic-281631"
+
+    xyz = TierListScraping(GAMEPRESS_LINK+TIER_LIST_LINK)
+    print(xyz.run())
