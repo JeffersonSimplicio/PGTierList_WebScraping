@@ -72,3 +72,19 @@ class PokeRankingJSON:
                     poke_ranking[type_] = {rank: [poke_info]}
 
         return poke_ranking
+
+    def generate_json(
+        self,
+        file_name: str = "pg_tier_list",
+        data=""
+    ) -> None:
+        if data == "":
+            ranking = self.generate_ranking()
+        else:
+            ranking = data
+
+        if not file_name.endswith(".json"):
+            file_name = file_name+".json"
+
+        with open(file_name, 'w') as file:
+            json.dump(ranking, file)
