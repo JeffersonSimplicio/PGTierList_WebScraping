@@ -23,6 +23,7 @@ class Pokémon:
         )
         # specific cases
         self._is_genesect = "genesect" in self.api_name
+        self._is_zacian = "zacian" in self.api_name
 
     def _poke_api_generate(self) -> str:
         # common cases
@@ -67,3 +68,10 @@ class Pokémon:
                 self.api_name = f"{self._API_POKE_FORM}/10078"
             else:  # normal
                 self.api_name = f"{self._API_POKE_FORM}/649"
+
+    def _if_zacian(self) -> None:
+        if self._is_zacian:
+            if "crowned" in self.api_name:
+                self.api_name = "zacian-crowned"
+            else:
+                self.api_name = "zacian"
