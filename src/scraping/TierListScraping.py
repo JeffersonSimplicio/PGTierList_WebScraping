@@ -22,10 +22,31 @@ class TierListScraping:
         divs_lists = [tier.parent.parent for tier in tiers]
         return divs_lists
 
-    def tier_list(self):
+    def tier_list(self) -> list[str]:
         divs_lists = self.divs_tier()
         tier_list = []
         for div in divs_lists:
             sub_title = div.find("h2", class_="main-title").string
             tier_list.append(sub_title)
         return tier_list
+
+    def pokemon_by_ranking(self) -> dict[str: list[dict[str, str]]]:
+        tier_list = self.tier_list()
+        divs_lists = self.divs_tier()
+        dict_ranking = {}
+        for index, value in enumerate(tier_list):
+            tmp = []
+            poke_cells = divs_lists[index].find_all(
+                "div",
+                class_="tier-list-cell"
+            )
+            for cell in poke_cells:
+                link = cell.find("a").get('href')
+                name = cell.find("span", class_="title-span").string
+                poke_data = {
+                    "name": name,
+                    "link": link
+                }
+                tmp.append(poke_data)
+            dict_ranking.update({value: tmp})
+        return dict_ranking
