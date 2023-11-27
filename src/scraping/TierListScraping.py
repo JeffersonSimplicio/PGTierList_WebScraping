@@ -21,3 +21,11 @@ class TierListScraping:
         tiers = self._soup.find_all("div", class_="gp-tier-container")
         divs_lists = [tier.parent.parent for tier in tiers]
         return divs_lists
+
+    def tier_list(self):
+        divs_lists = self.divs_tier()
+        tier_list = []
+        for div in divs_lists:
+            sub_title = div.find("h2", class_="main-title").string
+            tier_list.append(sub_title)
+        return tier_list
