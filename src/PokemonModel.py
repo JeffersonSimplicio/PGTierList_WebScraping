@@ -25,6 +25,7 @@ class Pokémon:
         self._is_genesect = "genesect" in self.api_name
         self._is_zacian = "zacian" in self.api_name
         self._is_hoopa = "hoopa" in self.api_name
+        self._is_darmanitan = "darmanitan" in self.api_name
 
     def _poke_api_generate(self) -> str:
         # common cases
@@ -83,3 +84,10 @@ class Pokémon:
                 self.api_name = "hoopa-unbound"
             else:
                 self.api_name = "hoopa"
+
+    def _if_darmanitan(self) -> None:
+        if self._is_darmanitan:
+            if self._is_galar:
+                self.api_name = "darmanitan-galar-standard"
+            else:
+                self.api_name = "darmanitan-standard"
