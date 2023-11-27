@@ -57,3 +57,24 @@ class PokeInfoScraping:
                 type_attack_list[type_].append(attacks)
 
         return type_attack_list
+
+    def get_poke_types(self) -> list[str]:
+        div_types_classes = (
+            ".field" +
+            ".field--name-field-pokemon-type" +
+            ".field--type-entity-reference" +
+            ".field--label-hidden" +
+            ".field__items"
+        )
+        div_name_types = (
+            ".field" +
+            ".field--name-name" +
+            ".field--type-string" +
+            ".field--label-hidden" +
+            ".field__item"
+        )
+        list_types = self._soup.select(
+            f"div{div_types_classes} div{div_name_types}"
+        )
+        y = [type_.string for type_ in list_types]
+        return y
