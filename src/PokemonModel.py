@@ -13,10 +13,12 @@ class Pokémon:
         self.api_name = self.name.lower()
         # common cases
         self._is_shadow = "shadow" in self.api_name
+        self._is_alola = "alola" in self.api_name
 
     def _poke_api_generate(self) -> str:
         # common cases
         self._if_case(self._is_shadow, "shadow", "")
+        self._if_case(self._is_alola, "alolan", "alola")
 
         return f"{self._API_POKE}/{self.api_name}"
 
