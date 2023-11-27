@@ -30,6 +30,9 @@ class Pokémon:
         self._is_darmanitan = "darmanitan" in self.api_name
         self._is_tapu = "tapu" in self.api_name
 
+        self._API_POKE_FORM = "pokemon-form"
+        self._API_POKE = "pokemon"
+
     def _poke_api_generate(self) -> str:
         # common cases
         self._if_case(self._is_shadow, "shadow", "")
@@ -37,7 +40,26 @@ class Pokémon:
         self._if_case(self._is_galar, "galarian", "galar")
         self._if_case(self._is_hisui, "hisuian", "hisui")
         self._if_forme()
+        self._if_x_or_y()
+        # specific cases
+        self._if_genesect()
+        self._if_zacian()
+        self._if_hoopa()
+        self._if_darmanitan()
 
+        if (
+            self._is_mega or
+            self._is_primal or
+            self._is_alola or
+            self._is_hisui or
+            (self._is_galar and not self._is_darmanitan)
+        ):
+            self.api_name = "-".join(reversed(self.api_name.lower().split()))
+        elif self._is_forme or self._is_tapu:
+            self.api_name = "-".join(self.api_name.lower().split())
+
+        if self._API_POKE_FORM in self.api_name:
+            return self.api_name
         return f"{self._API_POKE}/{self.api_name}"
 
     def _if_case(self, condition: bool, old: str, new: str) -> None:
