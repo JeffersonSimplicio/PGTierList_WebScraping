@@ -21,6 +21,8 @@ class Pokémon:
             len(self.name.split()) == 3 and
             self.name.split()[2] in "xy"
         )
+        # specific cases
+        self._is_genesect = "genesect" in self.api_name
 
     def _poke_api_generate(self) -> str:
         # common cases
@@ -51,3 +53,17 @@ class Pokémon:
         if self._is_x_or_y:
             list_name = self.api_name.split()
             self.api_name = f"{list_name[1]}-{list_name[0]}-{list_name[2]}"
+
+    # specific cases
+    def _if_genesect(self) -> None:
+        if self._is_genesect:
+            if "douse" in self.api_name:
+                self.api_name = f"{self._API_POKE_FORM}/10075"
+            elif "burn" in self.api_name:
+                self.api_name = f"{self._API_POKE_FORM}/10077"
+            elif "shock" in self.api_name:
+                self.api_name = f"{self._API_POKE_FORM}/10076"
+            elif "chill" in self.api_name:
+                self.api_name = f"{self._API_POKE_FORM}/10078"
+            else:  # normal
+                self.api_name = f"{self._API_POKE_FORM}/649"
