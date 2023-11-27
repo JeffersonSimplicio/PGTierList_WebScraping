@@ -33,6 +33,24 @@ class Pokémon:
         self._API_POKE_FORM = "pokemon-form"
         self._API_POKE = "pokemon"
 
+    def __str__(self) -> str:
+        is_shadow = str("shadow" in self.name.lower()).lower()
+        is_mega_or_primal = str(
+            "mega" in self.name.lower() or
+            "primal" in self.name.lower()
+        ).lower()
+        return (
+            "{\n"
+            f'    name: "{self.name}"",\n'
+            f'    poke_api: "{self._poke_api_generate()}",\n'
+            f'    quick_attack: {self.quick_attack},\n'
+            f'    charged_attack: {self.charged_attack},\n'
+            f'    type: {self.types},\n'
+            f'    is_shadow: {is_shadow},\n'
+            f'    is_mega_or_primal: {is_mega_or_primal}\n'
+            "}"
+        )
+
     def _poke_api_generate(self) -> str:
         # common cases
         self._if_case(self._is_shadow, "shadow", "")
