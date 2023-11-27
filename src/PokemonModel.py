@@ -12,6 +12,8 @@ class Pokémon:
         self.charged_attack = charged_attack
         self.api_name = self.name.lower()
         # common cases
+        self._is_mega = "mega" in self.api_name
+        self._is_primal = "primal" in self.api_name
         self._is_shadow = "shadow" in self.api_name
         self._is_alola = "alola" in self.api_name
         self._is_galar = "galar" in self.api_name
@@ -26,6 +28,7 @@ class Pokémon:
         self._is_zacian = "zacian" in self.api_name
         self._is_hoopa = "hoopa" in self.api_name
         self._is_darmanitan = "darmanitan" in self.api_name
+        self._is_tapu = "tapu" in self.api_name
 
     def _poke_api_generate(self) -> str:
         # common cases
