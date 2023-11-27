@@ -1,0 +1,4 @@
+import bcrypt
+
+
+class SecurityManager:
