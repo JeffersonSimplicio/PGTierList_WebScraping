@@ -19,3 +19,6 @@ class WebScraper:
                 self.driver.quit()
         except OSError as e:
             print(f"Error closing driver: {e}")
+
+    def __del__(self) -> None:
+        self.close_drive()
