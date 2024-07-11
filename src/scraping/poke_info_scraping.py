@@ -8,6 +8,9 @@ class PokeInfoScraping:
         self._driver.close_drive()
         self._soup = BeautifulSoup(self._source, "html.parser")
 
+    def prettify(self) -> str:
+        return self._soup.prettify()
+
     @property
     def is_shiny_available(self) -> bool:
         shiny_element = self._soup.find(
