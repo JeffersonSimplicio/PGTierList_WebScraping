@@ -27,3 +27,34 @@ class PokeInfoScraping:
         )
         list_types_string = [type_element.string for type_element in list_types]
         return list_types_string
+    
+    def get_attacks(self) ->list[dict[str, str]]:
+        tmp_attack = self.get_typing()
+        table_body = self._soup.select_one("table.DataGrid_dataGrid__Q3gQi tbody")
+        attacks = []
+        for tr in table_body:
+            type_fast_attack =  tr.select_one("td:nth-child(2)")\
+                .find("img")\
+                .get('title')\
+                .strip()
+            type_charged_attack =  tr.select_one("td:nth-child(3)")\
+                .find("img")\
+                .get('title')\
+                .strip()
+            if type_fast_attack == type_charged_attack:
+                try:
+                    tmp_attack.remove(type_charged_attack)
+                    fast_attack = tr.select_one("td:nth-child(2) a").text.strip()
+                    charged_attack = tr.select_one("td:nth-child(3) a").text.strip()
+                    attacks.append(
+                        {
+                            "type": type_charged_attack,
+                            "fast_attack": fast_attack,
+                            "charged_attack": charged_attack
+                        }
+                    )
+                    if len(tmp_attack) == 0:
+                        break
+                except ValueError:
+                    pass
+        return attacks
