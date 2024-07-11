@@ -24,3 +24,10 @@ class TierListScraping:
         )
         list_names_tiers = [h1.text for h1 in h1_elements]
         return list_names_tiers
+    
+    def get_tier_ranking(self):
+        groups = self._soup.find_all(
+            "ul",
+            class_="best-attackers_grid__WYqUF"
+        )
+        return groups
