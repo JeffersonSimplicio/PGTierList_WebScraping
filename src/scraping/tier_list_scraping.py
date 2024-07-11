@@ -17,3 +17,10 @@ class TierListScraping:
             class_="PokemonCard_pokemonCardContent___wx3G"
         )
         return len(list_pokemon)
+    
+    def get_name_tiers(self) -> list[str]:
+        h1_elements = self._soup.select(
+            "article.Card_stickyTitle__1CATW h1.Card_cardTitle__URr_A"
+        )
+        list_names_tiers = [h1.text for h1 in h1_elements]
+        return list_names_tiers
