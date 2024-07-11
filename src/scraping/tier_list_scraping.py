@@ -10,3 +10,10 @@ class TierListScraping:
 
     def prettify(self) -> str:
         return self._soup.prettify()
+
+    def count_pokemon(self) -> int:
+        list_pokemon = self._soup.find_all(
+            "span",
+            class_="PokemonCard_pokemonCardContent___wx3G"
+        )
+        return len(list_pokemon)
