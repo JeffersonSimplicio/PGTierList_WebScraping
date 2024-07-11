@@ -15,3 +15,15 @@ class PokeInfoScraping:
             class_="PokemonPageRenderers_isShinyAvailable__sygB4"
         )
         return shiny_element is not None
+    
+    def get_typing(self) -> list[str]:
+        types_elements = self._soup.find(
+            "span",
+            class_="PokemonPageRenderers_officialImageTyping__BZQBp"
+        )
+        list_types = types_elements.find_all(
+            "span",
+            class_="PokemonTyping_typing__VyONk"
+        )
+        list_types_string = [type_element.string for type_element in list_types]
+        return list_types_string
