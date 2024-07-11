@@ -8,3 +8,7 @@ class WebScraper:
 
     def get_page_source(self) ->str:
         return self.source
+
+    def save_page_to_file(self, file_name: str) -> None:
+        with open(file_name, "w", encoding="utf-8") as html_file:
+            html_file.write(self.source)
