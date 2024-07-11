@@ -7,3 +7,6 @@ class TierListScraping:
         self.source = self.driver.get_page_source()
         self.driver.close_drive()
         self._soup = BeautifulSoup(self.source, "html.parser")
+
+    def prettify(self) -> str:
+        return self._soup.prettify()
