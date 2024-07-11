@@ -12,3 +12,10 @@ class WebScraper:
     def save_page_to_file(self, file_name: str) -> None:
         with open(file_name, "w", encoding="utf-8") as html_file:
             html_file.write(self.source)
+
+    def close_drive(self) -> None:
+        try:
+            if self.driver:
+                self.driver.quit()
+        except OSError as e:
+            print(f"Error closing driver: {e}")
