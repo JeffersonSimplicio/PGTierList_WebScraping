@@ -36,7 +36,7 @@ class PokemonModel:
         self._is_tapu = "tapu" in self.api_name
         # other
         self._is_mega_or_primal = self._is_mega or self._is_primal
-        self._is_shadow = str("shadow" in self.name.lower()).lower()
+        self._is_shadow = "shadow" in self.name.lower()
     
     # Old Code
     # refactor in the future
@@ -48,8 +48,8 @@ class PokemonModel:
             f'    type: {self.types},\n'
             f'    attacks: {self.attacks}\n'
             f'    is_shiny_available: {self.is_shiny_available},\n'
-            f'    is_shadow: {str(self._is_shadow)},\n'
-            f'    is_mega_or_primal: {str(self._is_mega_or_primal)}\n'
+            f'    is_shadow: {self._is_shadow},\n'
+            f'    is_mega_or_primal: {self._is_mega_or_primal}\n'
             "}"
         )
 
