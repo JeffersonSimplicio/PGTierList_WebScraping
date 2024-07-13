@@ -1,16 +1,21 @@
-class Pokémon:
+class PokemonModel:
     def __init__(
-        self,
-        name: str,
-        types: str,
-        quick_attack: list,
-        charged_attack: list
-    ):
+            self,
+            name: str,
+            types: list[str],
+            is_shiny_available: bool,
+            attacks: list[dict[str, str]]
+        ) -> None:
         self.name = name
         self.types = types
-        self.quick_attack = quick_attack
-        self.charged_attack = charged_attack
+        self.is_shiny_available = is_shiny_available
+        self.attacks = attacks
         self.api_name = self.name.lower()
+        self.categorize()
+        self._API_POKE_FORM = "pokemon-form"
+        self._API_POKE = "pokemon"
+
+    def categorize(self):
         # common cases
         self._is_mega = "mega" in self.api_name
         self._is_primal = "primal" in self.api_name
@@ -29,25 +34,22 @@ class Pokémon:
         self._is_hoopa = "hoopa" in self.api_name
         self._is_darmanitan = "darmanitan" in self.api_name
         self._is_tapu = "tapu" in self.api_name
-
-        self._API_POKE_FORM = "pokemon-form"
-        self._API_POKE = "pokemon"
-
+        # other
+        self._is_mega_or_primal = self._is_mega or self._is_primal
+        self._is_shadow = "shadow" in self.name.lower()
+    
+    # Old Code
+    # refactor in the future
     def __str__(self) -> str:
-        is_shadow = str("shadow" in self.name.lower()).lower()
-        is_mega_or_primal = str(
-            "mega" in self.name.lower() or
-            "primal" in self.name.lower()
-        ).lower()
         return (
             "{\n"
             f'    name: "{self.name}"",\n'
             f'    poke_api: "{self._poke_api_generate()}",\n'
-            f'    quick_attack: {self.quick_attack},\n'
-            f'    charged_attack: {self.charged_attack},\n'
             f'    type: {self.types},\n'
-            f'    is_shadow: {is_shadow},\n'
-            f'    is_mega_or_primal: {is_mega_or_primal}\n'
+            f'    attacks: {self.attacks}\n'
+            f'    is_shiny_available: {self.is_shiny_available},\n'
+            f'    is_shadow: {self._is_shadow},\n'
+            f'    is_mega_or_primal: {self._is_mega_or_primal}\n'
             "}"
         )
 
@@ -55,14 +57,11 @@ class Pokémon:
         return {
             "name": self.name,
             "poke_api": self._poke_api_generate(),
-            "quick_attack": self.quick_attack,
-            "charged_attack": self.charged_attack,
             "types": self.types,
-            "is_shadow": "shadow" in self.name.lower(),
-            "is_mega_or_primal": (
-                "mega" in self.name.lower() or
-                "primal" in self.name.lower()
-            )
+            "attacks": self.attacks,
+            "is_shiny_available": self.is_shiny_available,
+            "is_shadow": self._is_shadow,
+            "is_mega_or_primal": self._is_mega_or_primal
         }
 
     def _poke_api_generate(self) -> str:
