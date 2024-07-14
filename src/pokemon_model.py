@@ -12,8 +12,9 @@ class PokemonModel:
         self.attacks = attacks
         self.api_name = self.name.lower()
         self.categorize()
-        self._API_POKE_FORM = "pokemon-form"
-        self._API_POKE = "pokemon"
+        _POKE_API_BASE = "https://pokeapi.co/api/v2/"
+        self._API_POKE_FORM = _POKE_API_BASE+"pokemon-form"
+        self._API_POKE = _POKE_API_BASE+"pokemon"
 
     def categorize(self):
         # common cases
