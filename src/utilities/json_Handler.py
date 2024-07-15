@@ -25,4 +25,10 @@ class JsonHandler:
             with open(self.file_path, 'w') as file:
                 json.dump(data, file, indent=indent) 
         except Exception as e:
-            print(f"Erro ao escrever no arquivo: {e}")  
+            print(f"Erro ao escrever no arquivo: {e}")
+
+    def update(self, key, value):
+        data = self.read()
+        if data:
+            data[key] = value
+            self.write(data)
