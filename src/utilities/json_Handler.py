@@ -1,4 +1,4 @@
-# WIP
+import os
 import json
 
 class JsonHandler:
@@ -23,7 +23,7 @@ class JsonHandler:
 
         try:
             with open(self.file_path, 'w') as file:
-                json.dump(data, file, indent=indent) 
+                json.dump(data, file, indent=indent)
         except Exception as e:
             print(f"Erro ao escrever no arquivo: {e}")
 
@@ -38,3 +38,11 @@ class JsonHandler:
         if data and key in data:
             del data[key]
             self.write(data)
+
+    def delete_file(self):
+        try:
+            os.remove(self.file_path)
+        except FileNotFoundError:
+            print(f"Arquivo {self.file_path} não encontrado.")
+        except Exception as e:
+            print(f"Erro ao apagar o arquivo: {e}")
