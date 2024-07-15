@@ -12,10 +12,9 @@ class JsonHandler:
             return data
         except FileNotFoundError:
             print(f"Arquivo {self.file_path} não encontrado.")
-            return None
+            return
         except json.JSONDecodeError:
             print("Erro ao decodificar o JSON.")
-            return None
 
     def write(self, data, indent: int = 2):
         if not self.file_path.endswith(".json"):
@@ -44,5 +43,6 @@ class JsonHandler:
             os.remove(self.file_path)
         except FileNotFoundError:
             print(f"Arquivo {self.file_path} não encontrado.")
+            return
         except Exception as e:
             print(f"Erro ao apagar o arquivo: {e}")
