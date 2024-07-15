@@ -32,3 +32,9 @@ class JsonHandler:
         if data:
             data[key] = value
             self.write(data)
+
+    def delete_key(self, key):
+        data = self.read()
+        if data and key in data:
+            del data[key]
+            self.write(data)
