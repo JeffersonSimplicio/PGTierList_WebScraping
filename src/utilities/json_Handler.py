@@ -16,3 +16,13 @@ class JsonHandler:
         except json.JSONDecodeError:
             print("Erro ao decodificar o JSON.")
             return None
+
+    def write(self, data, indent: int = 2):
+        if not self.file_path.endswith(".json"):
+            self.file_path = self.file_path+".json"
+
+        try:
+            with open(self.file_path, 'w') as file:
+                json.dump(data, file, indent=indent) 
+        except Exception as e:
+            print(f"Erro ao escrever no arquivo: {e}")  
