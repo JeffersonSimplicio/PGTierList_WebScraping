@@ -1,12 +1,13 @@
 from selenium import webdriver
 
+
 class WebScraper:
     def __init__(self, url: str) -> None:
         self.driver = webdriver.Edge()
         self.driver.get(url)
         self.source = self.driver.page_source
 
-    def get_page_source(self) ->str:
+    def get_page_source(self) -> str:
         return self.source
 
     def save_page_to_file(self, file_name: str) -> None:

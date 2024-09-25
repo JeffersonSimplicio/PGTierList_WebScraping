@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from src.scraping.web_scraper import WebScraper
 
+
 class TierListScraping:
     def __init__(self, link: str) -> None:
         self.driver = WebScraper(link)
@@ -32,26 +33,26 @@ class TierListScraping:
         )
         return groups
 
-    def pokemon_by_ranking(self) -> dict[str, list[dict[str,str]]]:
-            dict_ranking = {}
-            list_name_tier = self.get_name_tiers()
-            list_ranking_tier = self.get_tier_ranking()
-            for index, tier_name in enumerate(list_name_tier):
-                tmp = []
-                ranking_tier = list_ranking_tier[index].find_all(
-                    "li",
-                    class_="best-attackers_gridItem__thuKE"
-                )
-                for poke_cell in ranking_tier:
-                    link = poke_cell.find("a").get('href')
-                    poke_name = poke_cell.find(
-                        "span",
-                        class_="PokemonCard_pokemonCardContent___wx3G"
-                    ).text
-                    poke_data = {
-                        "name": poke_name,
-                        "link": link
-                    }
-                    tmp.append(poke_data)
-                dict_ranking.update({tier_name: tmp})
-            return dict_ranking
+    def pokemon_by_ranking(self) -> dict[str, list[dict[str, str]]]:
+        dict_ranking = {}
+        list_name_tier = self.get_name_tiers()
+        list_ranking_tier = self.get_tier_ranking()
+        for index, tier_name in enumerate(list_name_tier):
+            tmp = []
+            ranking_tier = list_ranking_tier[index].find_all(
+                "li",
+                class_="best-attackers_gridItem__thuKE"
+            )
+            for poke_cell in ranking_tier:
+                link = poke_cell.find("a").get('href')
+                poke_name = poke_cell.find(
+                    "span",
+                    class_="PokemonCard_pokemonCardContent___wx3G"
+                ).text
+                poke_data = {
+                    "name": poke_name,
+                    "link": link
+                }
+                tmp.append(poke_data)
+            dict_ranking.update({tier_name: tmp})
+        return dict_ranking

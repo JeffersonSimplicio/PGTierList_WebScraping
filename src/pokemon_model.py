@@ -1,11 +1,11 @@
 class PokemonModel:
     def __init__(
-            self,
-            name: str,
-            types: list[str],
-            is_shiny_available: bool,
-            attacks: list[dict[str, str]]
-        ) -> None:
+        self,
+        name: str,
+        types: list[str],
+        is_shiny_available: bool,
+        attacks: list[dict[str, str]]
+    ) -> None:
         self.name = name
         self.types = types
         self.is_shiny_available = is_shiny_available
@@ -38,7 +38,7 @@ class PokemonModel:
         # other
         self._is_mega_or_primal = self._is_mega or self._is_primal
         self._is_shadow = "shadow" in self.name.lower()
-    
+
     # Old Code
     # refactor in the future
     def __str__(self) -> str:
