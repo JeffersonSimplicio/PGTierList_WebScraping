@@ -1,5 +1,6 @@
 from src.scraping.poke_info_abstract import PokeInfoAbstract
 from src.scraping.web_scraper import WebScraper
+from src.models.attack_model import PokemonAttack
 
 
 class PokeInfoScraping(PokeInfoAbstract):
@@ -55,14 +56,14 @@ class PokeInfoScraping(PokeInfoAbstract):
                     charged_attack = tr.select_one("td:nth-child(3) a")\
                         .text.strip()
                     attacks.append(
-                        {
-                            "type": type_charged_attack,
-                            "fast_attack": fast_attack,
-                            "charged_attack": charged_attack
-                        }
+                        PokemonAttack(
+                            type_charged_attack,
+                            fast_attack,
+                            charged_attack
+                        ).to_dict()
                     )
                     if len(tmp_attack) == 0:
                         break
                 except ValueError:
                     pass
-        return attacks
+        return attacks  # [attack.to_dict() for attack in attacks]
