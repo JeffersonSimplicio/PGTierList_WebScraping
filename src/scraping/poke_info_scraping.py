@@ -1,18 +1,15 @@
-from bs4 import BeautifulSoup
+from src.scraping.poke_info_abstract import PokeInfoAbstract
 from src.scraping.web_scraper import WebScraper
 
 
-class PokeInfoScraping:
+class PokeInfoScraping(PokeInfoAbstract):
     def __init__(self, link: str) -> None:
-        self._driver = WebScraper(link)
-        self._source = self._driver.get_page_source()
-        self._driver.close_drive()
-        self._soup = BeautifulSoup(self._source, "html.parser")
+        self.driver = WebScraper(link)
+        self._soup = self.driver.setup_soup()
 
     def prettify(self) -> str:
         return self._soup.prettify()
 
-    @property
     def is_shiny_available(self) -> bool:
         shiny_element = self._soup.find(
             "span",

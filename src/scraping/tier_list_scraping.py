@@ -1,13 +1,12 @@
-from bs4 import BeautifulSoup
+from bs4.element import Tag
 from src.scraping.web_scraper import WebScraper
+from src.scraping.tier_list_abstract import TierListAbstract
 
 
-class TierListScraping:
-    def __init__(self, link: str) -> None:
+class TierListScraping(TierListAbstract):
+    def __init__(self: WebScraper, link: str) -> None:
         self.driver = WebScraper(link)
-        self.source = self.driver.get_page_source()
-        self.driver.close_drive()
-        self._soup = BeautifulSoup(self.source, "html.parser")
+        self._soup = self.driver.setup_soup()
 
     def prettify(self) -> str:
         return self._soup.prettify()
@@ -26,7 +25,7 @@ class TierListScraping:
         list_names_tiers = [h1.text for h1 in h1_elements]
         return list_names_tiers
 
-    def get_tier_ranking(self):
+    def get_tier_ranking(self) -> list[Tag]:
         groups = self._soup.find_all(
             "ul",
             class_="best-attackers_grid__WYqUF"

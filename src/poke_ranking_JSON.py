@@ -32,7 +32,7 @@ class PokeRankingJSON:
                 poke_data = PokemonModel(
                     name,
                     poke_info_base.get_typing(),
-                    poke_info_base.isShinyAvailable(),
+                    poke_info_base.is_shiny_available(),
                     poke_info_base.get_attacks(),
                 )
                 tmp_tier_list.append(poke_data.generate())

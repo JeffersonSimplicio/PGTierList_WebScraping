@@ -1,4 +1,5 @@
 from selenium import webdriver
+from bs4 import BeautifulSoup
 
 
 class WebScraper:
@@ -20,6 +21,12 @@ class WebScraper:
                 self.driver.quit()
         except OSError as e:
             print(f"Error closing driver: {e}")
+
+    def setup_soup(self) -> BeautifulSoup:
+        source = self.get_page_source()
+        self.close_drive()
+        soup = BeautifulSoup(source, "html.parser")
+        return soup
 
     def __del__(self) -> None:
         self.close_drive()
