@@ -1,3 +1,13 @@
+# TODO: Refactor this class!
+# This class has become overly complex and hard to maintain
+# It needs to be refactored for better readability, separation of concerns,
+# and maintainability.
+# Be careful when modifying it,
+# as it's crucial to the core functionality of the application.
+# Make sure to allocate enough time to properly refactor and test its behavior
+# to avoid breaking the application.
+# Priority: High
+
 class PokemonModel:
     def __init__(
         self,
