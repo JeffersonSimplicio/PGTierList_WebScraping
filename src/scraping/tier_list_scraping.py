@@ -1,6 +1,7 @@
 from bs4.element import Tag
 from src.scraping.web_scraper import WebScraper
 from src.scraping.tier_list_abstract import TierListAbstract
+from src.models.poke_link_model import PokeLinkModel
 
 
 class TierListScraping(TierListAbstract):
@@ -43,15 +44,12 @@ class TierListScraping(TierListAbstract):
                 class_="best-attackers_gridItem__thuKE"
             )
             for poke_cell in ranking_tier:
-                link = poke_cell.find("a").get('href')
-                poke_name = poke_cell.find(
+                link: str = poke_cell.find("a").get('href')
+                poke_name: str = poke_cell.find(
                     "span",
                     class_="PokemonCard_pokemonCardContent___wx3G"
                 ).text
-                poke_data = {
-                    "name": poke_name,
-                    "link": link
-                }
+                poke_data = PokeLinkModel(poke_name, link).to_dict()
                 tmp.append(poke_data)
             dict_ranking.update({tier_name: tmp})
         return dict_ranking
