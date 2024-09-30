@@ -5,9 +5,14 @@ from src.models.poke_link_model import PokeLinkModel
 
 
 class TierListScraping(TierListAbstract):
-    def __init__(self: WebScraper, link: str) -> None:
-        self.driver = WebScraper(link)
-        self._soup = self.driver.setup_soup()
+    def __init__(
+            self,
+            poke_link: type[PokeLinkModel],
+            scraper: WebScraper
+    ) -> None:
+        _scraper = scraper
+        self._soup = _scraper.setup_soup()
+        self._poke_link = poke_link
 
     def prettify(self) -> str:
         return self._soup.prettify()
@@ -49,7 +54,7 @@ class TierListScraping(TierListAbstract):
                     "span",
                     class_="PokemonCard_pokemonCardContent___wx3G"
                 ).text
-                poke_data = PokeLinkModel(poke_name, link).to_dict()
+                poke_data = self._poke_link(poke_name, link).to_dict()
                 tmp.append(poke_data)
             dict_ranking.update({tier_name: tmp})
         return dict_ranking

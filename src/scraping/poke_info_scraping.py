@@ -5,9 +5,14 @@ from bs4.element import Tag
 
 
 class PokeInfoScraping(PokeInfoAbstract):
-    def __init__(self, link: str) -> None:
-        self.driver = WebScraper(link)
-        self._soup = self.driver.setup_soup()
+    def __init__(
+            self,
+            poke_attack: type[PokeAttackModel],
+            scraper: WebScraper
+    ) -> None:
+        _scraper = scraper
+        self._soup = _scraper.setup_soup()
+        self._poke_attack = poke_attack
 
     def prettify(self) -> str:
         return self._soup.prettify()
@@ -53,7 +58,7 @@ class PokeInfoScraping(PokeInfoAbstract):
                     charged_attack = self._get_attack_name(tr, 3)
 
                     attacks.append(
-                        PokeAttackModel(
+                        self._poke_attack(
                             type_charged_attack,
                             fast_attack,
                             charged_attack

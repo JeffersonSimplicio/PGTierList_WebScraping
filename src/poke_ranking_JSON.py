@@ -2,6 +2,9 @@ import json
 from src.scraping.tier_list_scraping import TierListScraping
 from src.scraping.poke_info_scraping import PokeInfoScraping
 from src.pokemon_model import PokemonModel
+from src.scraping.web_scraper import WebScraper
+from src.models.poke_link_model import PokeLinkModel
+from src.models.poke_attack_model import PokeAttackModel
 
 LINK_BASE = "https://db.pokemongohub.net"
 LINK_TIER = "/best/raid-attackers"
@@ -9,7 +12,8 @@ LINK_TIER = "/best/raid-attackers"
 
 class PokeRankingJSON:
     def __init__(self) -> None:
-        self.TierList = TierListScraping(LINK_BASE + LINK_TIER)
+        driver = WebScraper(LINK_BASE + LINK_TIER)
+        self.TierList = TierListScraping(PokeLinkModel, driver)
         self.TierListDict = self.TierList.pokemon_by_ranking()
 
     def generate(self) -> dict[str, list[dict[str, any]]]:
@@ -28,7 +32,10 @@ class PokeRankingJSON:
                 print(f"Pokemon atual: {name}")
                 print(f"{counter} de {total_pokemons}, {percentage:.2f}%")
                 print(f"Resta: {total_pokemons-counter}")
-                poke_info_base = PokeInfoScraping(LINK_BASE + link)
+                poke_info_base = PokeInfoScraping(
+                    PokeAttackModel,
+                    WebScraper(LINK_BASE + link)
+                )
                 poke_data = PokemonModel(
                     name,
                     poke_info_base.get_typing(),
