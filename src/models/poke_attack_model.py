@@ -1,7 +1,7 @@
 from src.models.abstract_model import AbstractModel
 
 
-class PokemonAttack(AbstractModel):
+class PokeAttackModel(AbstractModel):
     def __init__(
             self,
             type_attack: str,

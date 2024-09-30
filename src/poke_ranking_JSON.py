@@ -12,7 +12,7 @@ class PokeRankingJSON:
         self.TierList = TierListScraping(LINK_BASE + LINK_TIER)
         self.TierListDict = self.TierList.pokemon_by_ranking()
 
-    def generate(self) -> dict[str[list[dict[str, any]]]]:
+    def generate(self) -> dict[str, list[dict[str, any]]]:
         counter = 0
         total_pokemons = self.TierList.count_pokemon()
         percentage = (counter / total_pokemons) * 100
