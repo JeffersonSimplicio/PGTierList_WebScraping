@@ -1,7 +1,7 @@
 from src.scraping.poke_info_abstract import PokeInfoAbstract
 from src.scraping.web_scraper import WebScraper
-from models.poke_attack_model import PokeAttackModel
-from bs4.element import PageElement
+from src.models.poke_attack_model import PokeAttackModel
+from bs4.element import Tag
 
 
 class PokeInfoScraping(PokeInfoAbstract):
@@ -28,7 +28,7 @@ class PokeInfoScraping(PokeInfoAbstract):
             "span",
             class_="PokemonTyping_typing__VyONk"
         )
-        list_types_string = [
+        list_types_string: list[str] = [
             type_element.string
             for type_element in list_types
         ]
@@ -42,15 +42,15 @@ class PokeInfoScraping(PokeInfoAbstract):
         attacks = []
 
         for tr in table_body:
-            type_fast_attack = self._get_type_attack(tr, 2)
-            type_charged_attack = self._get_type_attack(tr, 3)
+            type_fast_attack = self._get_attack_type(tr, 2)
+            type_charged_attack = self._get_attack_type(tr, 3)
 
             if type_fast_attack == type_charged_attack:
                 try:
                     tmp_attack.remove(type_charged_attack)
 
-                    fast_attack = self._get_attack(tr, 2)
-                    charged_attack = self._get_attack(tr, 3)
+                    fast_attack = self._get_attack_name(tr, 2)
+                    charged_attack = self._get_attack_name(tr, 3)
 
                     attacks.append(
                         PokeAttackModel(
@@ -65,11 +65,11 @@ class PokeInfoScraping(PokeInfoAbstract):
                     pass
         return attacks  # [attack.to_dict() for attack in attacks]
 
-    def _get_type_attack(self, tr: PageElement, index: int) -> str:
+    def _get_attack_type(self, tr: Tag, index: int) -> str:
         return tr.select_one(f"td:nth-child({index})")\
             .find("img")\
-            .get('title')\
+            .get("title")\
             .strip()
 
-    def _get_attack(self, tr: PageElement, index: int) -> str:
+    def _get_attack_name(self, tr: Tag, index: int) -> str:
         return tr.select_one(f"td:nth-child({index}) a").text.strip()
