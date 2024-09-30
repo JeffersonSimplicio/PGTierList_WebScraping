@@ -1,6 +1,7 @@
 from src.scraping.poke_info_abstract import PokeInfoAbstract
 from src.scraping.web_scraper import WebScraper
 from models.poke_attack_model import PokeAttackModel
+from bs4.element import PageElement
 
 
 class PokeInfoScraping(PokeInfoAbstract):
@@ -39,22 +40,18 @@ class PokeInfoScraping(PokeInfoAbstract):
             "table.DataGrid_dataGrid__Q3gQi tbody"
         )
         attacks = []
+
         for tr in table_body:
-            type_fast_attack = tr.select_one("td:nth-child(2)")\
-                .find("img")\
-                .get('title')\
-                .strip()
-            type_charged_attack = tr.select_one("td:nth-child(3)")\
-                .find("img")\
-                .get('title')\
-                .strip()
+            type_fast_attack = self._get_type_attack(tr, 2)
+            type_charged_attack = self._get_type_attack(tr, 3)
+
             if type_fast_attack == type_charged_attack:
                 try:
                     tmp_attack.remove(type_charged_attack)
-                    fast_attack = tr.select_one("td:nth-child(2) a")\
-                        .text.strip()
-                    charged_attack = tr.select_one("td:nth-child(3) a")\
-                        .text.strip()
+
+                    fast_attack = self._get_attack(tr, 2)
+                    charged_attack = self._get_attack(tr, 3)
+
                     attacks.append(
                         PokeAttackModel(
                             type_charged_attack,
@@ -67,3 +64,12 @@ class PokeInfoScraping(PokeInfoAbstract):
                 except ValueError:
                     pass
         return attacks  # [attack.to_dict() for attack in attacks]
+
+    def _get_type_attack(self, tr: PageElement, index: int) -> str:
+        return tr.select_one(f"td:nth-child({index})")\
+            .find("img")\
+            .get('title')\
+            .strip()
+
+    def _get_attack(self, tr: PageElement, index: int) -> str:
+        return tr.select_one(f"td:nth-child({index}) a").text.strip()
