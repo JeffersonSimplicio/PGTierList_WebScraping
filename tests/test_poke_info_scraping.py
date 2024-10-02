@@ -83,3 +83,32 @@ def test_get_typing(scraper, mock_web_scraper):
         "span",
         class_="PokemonTyping_typing__VyONk"
     )
+
+
+# Teste para o método get_attacks
+def test_get_attacks(scraper, mock_web_scraper):
+    mock_soup = mock_web_scraper.return_value.setup_soup.return_value
+    mock_table_body = MagicMock()
+    mock_table_body.__iter__.return_value = [MagicMock(), MagicMock()]
+    mock_soup.select_one.return_value = mock_table_body
+
+    # Configurando os mocks para os métodos privados
+    scraper._get_attack_type = MagicMock(side_effect=["Electric", "Electric"])
+    scraper._get_attack_name = MagicMock(
+        side_effect=["Thunder Shock", "Thunderbolt"]
+    )
+
+    # Simulando o retorno do método get_typing
+    scraper.get_typing = MagicMock(return_value=["Electric"])
+
+    result = scraper.get_attacks()
+
+    assert len(result) == 1
+    assert result[0] == {
+        "type": "Electric",
+        "fast_attack": "Thunder Shock",
+        "charged_attack": "Thunderbolt",
+    }
+    mock_soup.select_one.assert_called_once_with(
+        "table.DataGrid_dataGrid__Q3gQi tbody"
+    )
