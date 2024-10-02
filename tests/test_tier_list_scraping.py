@@ -62,12 +62,27 @@ def test_count_pokemon(scraper, mock_web_scraper):
 def test_get_name_tiers(scraper, mock_web_scraper):
     mock_soup = mock_web_scraper.return_value.setup_soup.return_value
     mock_h1 = MagicMock()
-    mock_h1.text = "Tier 1"
+    mock_h1.text = "Tier S"
     mock_soup.select.return_value = [mock_h1]
 
     result = scraper.get_name_tiers()
 
-    assert result == ["Tier 1"]
+    assert result == ["Tier S"]
     mock_soup.select.assert_called_once_with(
         "article.Card_stickyTitle__1CATW h1.Card_cardTitle__URr_A"
+    )
+
+
+# Teste para o método get_tier_ranking
+def test_get_tier_ranking(scraper, mock_web_scraper):
+    mock_soup = mock_web_scraper.return_value.setup_soup.return_value
+    mock_ul = MagicMock(spec=Tag)
+    mock_soup.find_all.return_value = [mock_ul]
+
+    result = scraper.get_tier_ranking()
+
+    assert result == [mock_ul]
+    mock_soup.find_all.assert_called_once_with(
+        "ul",
+        class_="best-attackers_grid__WYqUF"
     )
