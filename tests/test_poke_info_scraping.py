@@ -60,3 +60,26 @@ def test_is_shiny_available(scraper, mock_web_scraper):
         "span",
         class_="PokemonPageRenderers_isShinyAvailable__sygB4"
     )
+
+
+# Teste para o método get_typing
+def test_get_typing(scraper, mock_web_scraper):
+    mock_soup = mock_web_scraper.return_value.setup_soup.return_value
+    mock_type_element = MagicMock()
+    mock_type_element.find_all.return_value = [
+        MagicMock(string="Electric"),
+        MagicMock(string="Fire"),
+    ]
+    mock_soup.find.return_value = mock_type_element
+
+    result = scraper.get_typing()
+
+    assert result == ["Electric", "Fire"]
+    mock_soup.find.assert_called_once_with(
+        "span",
+        class_="PokemonPageRenderers_officialImageTyping__BZQBp"
+    )
+    mock_type_element.find_all.assert_called_once_with(
+        "span",
+        class_="PokemonTyping_typing__VyONk"
+    )
