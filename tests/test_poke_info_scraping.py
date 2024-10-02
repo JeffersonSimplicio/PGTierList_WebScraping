@@ -128,3 +128,21 @@ def test_get_attack_type(scraper):
     assert result == "Electric"
     mock_tr.select_one.assert_called_once_with("td:nth-child(2)")
     mock_tr.select_one.return_value.find.assert_called_once_with("img")
+
+
+# Teste para o método _get_attack_name
+def test_get_attack_name(scraper):
+    mock_tr = MagicMock()
+
+    # Configurando o mock para simular o comportamento do método `select_one`
+    mock_a = MagicMock()
+    mock_a.text = "Thunder Shock"
+
+    # Fazendo com que o select_one retorne um objeto que contém `a` como mock_a
+    mock_tr.select_one.return_value = mock_a
+
+    # Chamando o método _get_attack_name
+    result = scraper._get_attack_name(mock_tr, 2)
+
+    assert result == "Thunder Shock"
+    mock_tr.select_one.assert_called_once_with("td:nth-child(2) a")
