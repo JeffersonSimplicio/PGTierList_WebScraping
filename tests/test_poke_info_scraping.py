@@ -112,3 +112,19 @@ def test_get_attacks(scraper, mock_web_scraper):
     mock_soup.select_one.assert_called_once_with(
         "table.DataGrid_dataGrid__Q3gQi tbody"
     )
+
+
+# Teste para o método _get_attack_type
+def test_get_attack_type(scraper):
+    mock_tr = MagicMock()
+    mock_tr.select_one\
+        .return_value\
+        .find.return_value\
+        .get\
+        .return_value = "Electric"
+
+    result = scraper._get_attack_type(mock_tr, 2)
+
+    assert result == "Electric"
+    mock_tr.select_one.assert_called_once_with("td:nth-child(2)")
+    mock_tr.select_one.return_value.find.assert_called_once_with("img")
