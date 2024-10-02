@@ -34,3 +34,12 @@ def test_poke_attack_repr(poke_attack):
     )
 
     assert repr(poke_attack) == expected_repr
+
+
+def test_poke_attack_str(poke_attack):
+    expected_str = (
+        "Electric Attack - "
+        "Fast: Thunder Shock, "
+        "Charged: Thunderbolt"
+    )
+    assert str(poke_attack) == expected_str
