@@ -35,3 +35,14 @@ def scraper(mock_poke_attack_model, mock_web_scraper):
         poke_attack=mock_poke_attack_model,
         scraper=mock_web_scraper.return_value
     )
+
+
+# Teste para o método prettify
+def test_prettify(scraper, mock_web_scraper):
+    mock_soup = mock_web_scraper.return_value.setup_soup.return_value
+    mock_soup.prettify.return_value = "<html></html>"
+
+    result = scraper.prettify()
+
+    assert result == "<html></html>"
+    mock_soup.prettify.assert_called_once()
