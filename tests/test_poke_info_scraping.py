@@ -46,3 +46,17 @@ def test_prettify(scraper, mock_web_scraper):
 
     assert result == "<html></html>"
     mock_soup.prettify.assert_called_once()
+
+
+# Teste para o método is_shiny_available
+def test_is_shiny_available(scraper, mock_web_scraper):
+    mock_soup = mock_web_scraper.return_value.setup_soup.return_value
+    mock_soup.find.return_value = MagicMock()
+
+    result = scraper.is_shiny_available()
+
+    assert result is True
+    mock_soup.find.assert_called_once_with(
+        "span",
+        class_="PokemonPageRenderers_isShinyAvailable__sygB4"
+    )
