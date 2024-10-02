@@ -28,5 +28,12 @@ def test_poke_link_repr(poke_link):
         "PokeLinkModel(name='Pikachu', "
         "link='www.thisisatest.com/pikachu')"
     )
-
     assert repr(poke_link) == expected_repr
+
+
+def test_poke_attack_str(poke_link):
+    expected_str = (
+        "Pokémon name: Pikachu,\n"
+        "Link to details: www.thisisatest.com/pikachu"
+    )
+    assert str(poke_link) == expected_str

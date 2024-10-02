@@ -16,4 +16,4 @@ class PokeLinkModel(AbstractModel):
         return f"PokeLinkModel(name='{self.name}', link='{self.link}')"
 
     def __str__(self) -> str:
-        return f"Pokémon name: {self.name},\n Link to details: {self.link}"
+        return f"Pokémon name: {self.name},\nLink to details: {self.link}"

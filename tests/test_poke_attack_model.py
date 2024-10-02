@@ -36,7 +36,6 @@ def test_poke_attack_repr(poke_attack):
         "fast_attack=Thunder Shock, "
         "charged_attack=Thunderbolt)"
     )
-
     assert repr(poke_attack) == expected_repr
 
 
