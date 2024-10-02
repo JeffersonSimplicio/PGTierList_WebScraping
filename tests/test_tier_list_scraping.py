@@ -42,3 +42,16 @@ def test_prettify(scraper, mock_web_scraper):
 
     assert result == "<html></html>"
     mock_soup.prettify.assert_called_once()
+
+
+# Teste para o método count_pokemon
+def test_count_pokemon(scraper, mock_web_scraper):
+    mock_soup = mock_web_scraper.return_value.setup_soup.return_value
+    mock_soup.find_all.return_value = ["poke1", "poke2", "poke3"]
+
+    result = scraper.count_pokemon()
+
+    assert result == 3
+    mock_soup.find_all.assert_called_once_with(
+        "span", class_="PokemonCard_pokemonCardContent___wx3G"
+    )
