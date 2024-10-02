@@ -1,19 +1,31 @@
 import json
-from src.scraping.tier_list_scraping import TierListScraping
-from src.scraping.poke_info_scraping import PokeInfoScraping
 from src.pokemon_model import PokemonModel
-from src.scraping.web_scraper import WebScraper
+
 from src.models.poke_link_model import PokeLinkModel
 from src.models.poke_attack_model import PokeAttackModel
-
-LINK_BASE = "https://db.pokemongohub.net"
-LINK_TIER = "/best/raid-attackers"
+from src.scraping.web_scraper import WebScraper
+from src.scraping.tier_list_abstract import TierListAbstract
+from src.scraping.poke_info_scraping import PokeInfoAbstract
 
 
 class PokeRankingJSON:
-    def __init__(self) -> None:
-        driver = WebScraper(LINK_BASE + LINK_TIER)
-        self.TierList = TierListScraping(PokeLinkModel, driver)
+    def __init__(
+        self,
+        poke_link: type[PokeLinkModel],
+        poke_attack: type[PokeAttackModel],
+        scraper: type[WebScraper],
+        tier_list_scraping: type[TierListAbstract],
+        poke_info_scraping: type[PokeInfoAbstract],
+        link_base: str,
+        link_tier: str
+    ) -> None:
+        self.poke_attack = poke_attack
+        self.scraper = scraper
+        self.poke_info_scraping = poke_info_scraping
+        self.link_base = link_base
+
+        driver = self.scraper(self.link_base + link_tier)
+        self.TierList = tier_list_scraping(poke_link, driver)
         self.TierListDict = self.TierList.pokemon_by_ranking()
 
     def generate(self) -> dict[str, list[dict[str, any]]]:
@@ -25,16 +37,16 @@ class PokeRankingJSON:
             print(f"Tier: {tier}")
             tmp_tier_list = []
             for pokemon in poke_list:
-                name = pokemon["name"]
-                link = pokemon["link"]
+                name: str = pokemon["name"]
+                link: str = pokemon["link"]
                 counter += 1
                 percentage = (counter / total_pokemons) * 100
                 print(f"Pokemon atual: {name}")
                 print(f"{counter} de {total_pokemons}, {percentage:.2f}%")
                 print(f"Resta: {total_pokemons-counter}")
-                poke_info_base = PokeInfoScraping(
-                    PokeAttackModel,
-                    WebScraper(LINK_BASE + link)
+                poke_info_base = self.poke_info_scraping(
+                    self.poke_attack,
+                    self.scraper(self.link_base + link)
                 )
                 poke_data = PokemonModel(
                     name,
