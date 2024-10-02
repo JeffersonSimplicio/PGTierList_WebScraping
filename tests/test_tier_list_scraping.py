@@ -86,3 +86,48 @@ def test_get_tier_ranking(scraper, mock_web_scraper):
         "ul",
         class_="best-attackers_grid__WYqUF"
     )
+
+
+# Teste para o método pokemon_by_ranking
+def test_pokemon_by_ranking(scraper, mock_web_scraper, mock_poke_link_model):
+    mock_soup = mock_web_scraper.return_value.setup_soup.return_value
+    mock_name_tiers = ["Tier 1", "Tier 2"]
+    mock_ranking_tier = [MagicMock(), MagicMock()]
+
+    mock_soup.select.return_value = mock_name_tiers
+    mock_soup.find_all.return_value = mock_ranking_tier
+
+    scraper.get_name_tiers = MagicMock(return_value=mock_name_tiers)
+    scraper.get_tier_ranking = MagicMock(return_value=mock_ranking_tier)
+
+    # Mockando a extração de links e nomes de pokémons
+    mock_ranking_tier[0].find_all.return_value = [
+        MagicMock(
+            find=lambda tag, **kwargs: MagicMock(
+                get=lambda attr: "link1", text="Pikachu"
+            )
+        )
+    ]
+    mock_ranking_tier[1].find_all.return_value = [
+        MagicMock(
+            find=lambda tag, **kwargs: MagicMock(
+                get=lambda attr: "link2", text="Charmander"
+            )
+        )
+    ]
+
+    # Mockando o método to_dict para retornar o dicionário correto
+    mock_poke_link_model.return_value.to_dict.side_effect = [
+        {"name": "Pikachu", "link": "link1"},
+        {"name": "Charmander", "link": "link2"},
+    ]
+
+    result = scraper.pokemon_by_ranking()
+
+    assert "Tier 1" in result
+    assert len(result["Tier 1"]) == 1
+    assert result["Tier 1"][0] == {"name": "Pikachu", "link": "link1"}
+    assert result["Tier 2"][0] == {"name": "Charmander", "link": "link2"}
+
+    scraper.get_name_tiers.assert_called_once()
+    scraper.get_tier_ranking.assert_called_once()
