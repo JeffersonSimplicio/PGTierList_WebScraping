@@ -44,3 +44,12 @@ def test_save_page_to_file(web_scraper, tmp_path):
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
         assert content == "<html><body><h1>Test Page</h1></body></html>"
+
+
+def test_close_driver(web_scraper, mock_webdriver):
+    # Testando se o driver é fechado corretamente
+    mock_driver = mock_webdriver.return_value
+    web_scraper.close_drive()
+
+    # Verificando se o método quit foi chamado
+    mock_driver.quit.assert_called_once()
