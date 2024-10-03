@@ -68,3 +68,14 @@ def test_setup_soup(web_scraper, mock_soup):
     )
     assert isinstance(soup, BeautifulSoup)
     assert soup.h1.string == "Test Page"
+
+
+def test_del_method(web_scraper, mock_webdriver):
+    # Testando o método __del__ que fecha o driver
+    mock_driver = mock_webdriver.return_value
+
+    # Chamando o método __del__ explicitamente
+    web_scraper.__del__()
+
+    # Verificando se o driver foi fechado
+    mock_driver.quit.assert_called_once()
