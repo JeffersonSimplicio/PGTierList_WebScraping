@@ -53,3 +53,18 @@ def test_close_driver(web_scraper, mock_webdriver):
 
     # Verificando se o método quit foi chamado
     mock_driver.quit.assert_called_once()
+
+
+def test_setup_soup(web_scraper, mock_soup):
+    # Mockando o BeautifulSoup
+    with patch(
+        "src.scraping.web_scraper.BeautifulSoup", return_value=mock_soup
+    ) as mock_bs:
+        soup = web_scraper.setup_soup()
+
+    # Verificando se o setup_soup retorna um objeto BeautifulSoup
+    mock_bs.assert_called_once_with(
+        "<html><body><h1>Test Page</h1></body></html>", "html.parser"
+    )
+    assert isinstance(soup, BeautifulSoup)
+    assert soup.h1.string == "Test Page"
