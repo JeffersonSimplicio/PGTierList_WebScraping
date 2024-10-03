@@ -25,3 +25,9 @@ def web_scraper(mock_webdriver):
     mock_driver.page_source = "<html><body><h1>Test Page</h1></body></html>"
     scraper = WebScraper(url="http://test-url.com")
     return scraper
+
+
+def test_get_page_source(web_scraper):
+    # Testando se o método get_page_source retorna o código HTML correto
+    page_source = web_scraper.get_page_source()
+    assert page_source == "<html><body><h1>Test Page</h1></body></html>"
