@@ -3,12 +3,12 @@ from abc import ABC, abstractmethod
 
 class AbstractModel(ABC):
     @abstractmethod
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> dict[str, any]:
         """Converts the model to a dictionary."""
         pass
 
     @abstractmethod
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Returns a developer-friendly string representation."""
         pass
 
