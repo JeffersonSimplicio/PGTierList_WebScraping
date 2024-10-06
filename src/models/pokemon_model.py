@@ -107,18 +107,18 @@ class PokemonModel(AbstractModel):
             [
                 self.categories[cat]
                 for cat
-                in ["is_mega", "is_primal", "is_alola", "is_hisui"]
+                in ["is_mega", "is_primal", "is_forme", "is_alola", "is_hisui"]
             ]
         ) or (
             self.categories["is_galar"]
             and not self.categories["is_darmanitan"]
         ):
             self.api_name = "-".join(reversed(self.api_name.lower().split()))
-        elif self.categories["is_forme"] or self.categories["is_tapu"]:
+        elif self.categories["is_tapu"]:
             self.api_name = "-".join(self.api_name.lower().split())
 
         self.api_name = (
-            f"{self.API_POKE_FORM}/{self.api_name}"
+            self.api_name
             if self.API_POKE_FORM in self.api_name
             else f"{self.API_POKE}/{self.api_name}"
         )
