@@ -60,7 +60,29 @@ class PokemonModel(AbstractModel):
         )
 
     def categorize(self):
-        self.is_shadow = "shadow" in self.name
-        self._is_mega = "mega" in self.api_name
-        self._is_primal = "primal" in self.api_name
+        name_lower = self.name.lower()
+
+        # Common Cases
+        self.is_shadow = "shadow" in name_lower
+        self._is_mega = "mega" in name_lower
+        self._is_primal = "primal" in name_lower
+        self._is_forme = "form" in name_lower
+        self._is_x_or_y = (
+            len(name_lower.split()) == 3
+            and name_lower.split()[2] in "xy"
+        )
+
+        # Specific Cases
+        self._is_genesect = "genesect" in name_lower
+        self._is_zacian = "zacian" in name_lower
+        self._is_hoopa = "hoopa" in name_lower
+        self._is_darmanitan = "darmanitan" in name_lower
+        self._is_tapu = "tapu" in name_lower
+
+        # Region
+        self._is_alola = "alola" in name_lower
+        self._is_galar = "galar" in name_lower
+        self._is_hisui = "hisui" in name_lower
+
+        # Other
         self.is_mega_or_primal = self._is_mega or self._is_primal
