@@ -2,18 +2,23 @@ from src.models.abstract_model import AbstractModel
 
 
 class PokemonModel(AbstractModel):
+    POKE_API_BASE = "https://pokeapi.co/api/v2/"
+    API_POKE = f"{POKE_API_BASE}pokemon"
+    API_POKE_FORM = f"{POKE_API_BASE}pokemon-form"
+
     def __init__(
         self, name: str,
         types: list[str],
         is_shiny_available: bool,
         attacks: list[dict[str, str]]
     ) -> None:
-        self.name = name.lower()
+        self.name = name
         self.types = types
         self.is_shiny_available = is_shiny_available
         self.attacks = attacks
 
-        self.api_name = self.name
+        self.api_name = self.name.lower()
+
         self.categorize()
 
     def to_dict(self) -> dict[str, any]:
@@ -62,30 +67,28 @@ class PokemonModel(AbstractModel):
         )
 
     def categorize(self):
-        name_lower = self.name.lower()
-
         self.categories = {
             # Common Cases
-            "is_mega": "mega" in name_lower,
-            "is_primal": "primal" in name_lower,
-            "is_shadow": "shadow" in name_lower,
-            "is_forme": "form" in name_lower,
+            "is_mega": "mega" in self.api_name,
+            "is_primal": "primal" in self.api_name,
+            "is_shadow": "shadow" in self.api_name,
+            "is_forme": "form" in self.api_name,
             "is_x_or_y": (
-                len(self.name.split()) == 3
-                and self.name.split()[2] in "xy"
+                len(self.api_name.split()) == 3
+                and self.api_name.split()[2] in "xy"
             ),
 
             # Specific Cases
-            "is_genesect": "genesect" in name_lower,
-            "is_zacian": "zacian" in name_lower,
-            "is_hoopa": "hoopa" in name_lower,
-            "is_darmanitan": "darmanitan" in name_lower,
-            "is_tapu": "tapu" in name_lower,
+            "is_genesect": "genesect" in self.api_name,
+            "is_zacian": "zacian" in self.api_name,
+            "is_hoopa": "hoopa" in self.api_name,
+            "is_darmanitan": "darmanitan" in self.api_name,
+            "is_tapu": "tapu" in self.api_name,
 
-            # Region
-            "is_alola": "alola" in name_lower,
-            "is_galar": "galar" in name_lower,
-            "is_hisui": "hisui" in name_lower,
+            # Regions
+            "is_alola": "alola" in self.api_name,
+            "is_galar": "galar" in self.api_name,
+            "is_hisui": "hisui" in self.api_name,
 
         }
 
@@ -93,4 +96,51 @@ class PokemonModel(AbstractModel):
         self.categories["is_mega_or_primal"] = (
             self.categories["is_mega"]
             or self.categories["is_primal"]
+        )
+
+    def _apply_specific_cases(self):
+        if self.categories["is_genesect"]:
+            self._genesect_case()
+
+        elif self.categories["is_zacian"]:
+            self._zacian_case()
+
+        elif self.categories["is_hoopa"]:
+            self._hoopa_case()
+
+        elif self.categories["is_darmanitan"]:
+            self._darmanitan_case()
+
+    def _genesect_case(self):
+        genesect_forms = {
+            "douse": "10075",
+            "burn": "10077",
+            "shock": "10076",
+            "chill": "10078"
+        }
+        for form, form_id in genesect_forms.items():
+            if form in self.api_name:
+                self.api_name = f"{self.API_POKE_FORM}/{form_id}"
+                return
+        self.api_name = f"{self.API_POKE_FORM}/649"  # normal form
+
+    def _zacian_case(self):
+        self.api_name = (
+            "zacian-crowned"
+            if "crowned" in self.api_name
+            else "zacian"
+        )
+
+    def _hoopa_case(self):
+        self.api_name = (
+            "hoopa-unbound"
+            if "unbound" in self.api_name
+            else "hoopa"
+        )
+
+    def _darmanitan_case(self):
+        self.api_name = (
+            "darmanitan-galar-standard"
+            if self.categories["is_galar"]
+            else "darmanitan-standard"
         )
