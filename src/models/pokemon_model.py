@@ -72,7 +72,10 @@ class PokemonModel(AbstractModel):
             # Common Cases
             "is_mega": "mega" in self.api_name,
             "is_primal": "primal" in self.api_name,
-            "is_shadow": "shadow" in self.api_name,
+            # Usando split() para garantir que 'shadow'
+            # seja verificado como uma palavra isolada
+            # e não parte de outra, como em 'Marshadow'
+            "is_shadow": "shadow" in self.api_name.split(),
             "is_forme": "form" in self.api_name,
             "is_x_or_y": (
                 len(self.api_name.split()) == 3
@@ -205,7 +208,3 @@ class PokemonModel(AbstractModel):
 # Apex Shadow Ho-Oh
 # Sky Forme Shaymin
 # Shadow Mr. Rime
-
-# Marshadow
-# Esta sendo categorizado como shadow
-# Sugestão: sando split()
