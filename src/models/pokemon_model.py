@@ -98,6 +98,29 @@ class PokemonModel(AbstractModel):
             or self.categories["is_primal"]
         )
 
+    def _apply_common_cases(self):
+        common_cases = [
+            ("is_shadow", "shadow", ""),
+            ("is_alola", "alolan", "alola"),
+            ("is_galar", "galarian", "galar"),
+            ("is_hisui", "hisuian", "hisui")
+        ]
+        for category, old, new in common_cases:
+            if self.categories[category]:
+                self.api_name = self.api_name.replace(old, new).strip()
+
+        if self.categories["is_forme"]:
+            self.api_name = self.api_name\
+                .replace("(", "")\
+                .replace(")", "")\
+                .replace("forme", "")\
+                .replace("form", "")\
+                .strip()
+
+        if self.categories["is_x_or_y"]:
+            name_parts = self.api_name.split()
+            self.api_name = f"{name_parts[1]}-{name_parts[0]}-{name_parts[2]}"
+
     def _apply_specific_cases(self):
         if self.categories["is_genesect"]:
             self._genesect_case()
