@@ -20,6 +20,7 @@ class PokemonModel(AbstractModel):
         self.api_name = self.name.lower()
 
         self.categorize()
+        self._generate_poke_api()
 
     def to_dict(self) -> dict[str, any]:
         return {
@@ -75,7 +76,7 @@ class PokemonModel(AbstractModel):
             "is_forme": "form" in self.api_name,
             "is_x_or_y": (
                 len(self.api_name.split()) == 3
-                and self.api_name.split()[2] in "xy"
+                and self.api_name.split()[1] in "xy"
             ),
 
             # Specific Cases
@@ -96,6 +97,30 @@ class PokemonModel(AbstractModel):
         self.categories["is_mega_or_primal"] = (
             self.categories["is_mega"]
             or self.categories["is_primal"]
+        )
+
+    def _generate_poke_api(self):
+        self._apply_common_cases()
+        self._apply_specific_cases()
+
+        if any(
+            [
+                self.categories[cat]
+                for cat
+                in ["is_mega", "is_primal", "is_alola", "is_hisui"]
+            ]
+        ) or (
+            self.categories["is_galar"]
+            and not self.categories["is_darmanitan"]
+        ):
+            self.api_name = "-".join(reversed(self.api_name.lower().split()))
+        elif self.categories["is_forme"] or self.categories["is_tapu"]:
+            self.api_name = "-".join(self.api_name.lower().split())
+
+        self.api_name = (
+            f"{self.API_POKE_FORM}/{self.api_name}"
+            if self.API_POKE_FORM in self.api_name
+            else f"{self.API_POKE}/{self.api_name}"
         )
 
     def _apply_common_cases(self):
@@ -119,7 +144,8 @@ class PokemonModel(AbstractModel):
 
         if self.categories["is_x_or_y"]:
             name_parts = self.api_name.split()
-            self.api_name = f"{name_parts[1]}-{name_parts[0]}-{name_parts[2]}"
+            print(name_parts)
+            self.api_name = f"{name_parts[2]}-{name_parts[0]}-{name_parts[1]}"
 
     def _apply_specific_cases(self):
         if self.categories["is_genesect"]:
@@ -167,3 +193,19 @@ class PokemonModel(AbstractModel):
             if self.categories["is_galar"]
             else "darmanitan-standard"
         )
+
+# Casos que precisam de revisão especifica
+# Forme precisam ser revisados, Keldeo é exceção
+# Keldeo (Ordinary Forme)
+# Giratina
+# Deoxys
+# Sirfetch'd
+# Genesect(todos)
+# Necrozma(Formas especiais)
+# Apex Shadow Ho-Oh
+# Sky Forme Shaymin
+# Shadow Mr. Rime
+
+# Marshadow
+# Esta sendo categorizado como shadow
+# Sugestão: sando split()
