@@ -23,8 +23,8 @@ class PokemonModel(AbstractModel):
             "types": self.types,
             "attacks": self.attacks,
             "is_shiny_available": self.is_shiny_available,
-            "is_shadow": self.is_shadow,
-            "is_mega_or_primal": self.is_mega_or_primal,
+            "is_shadow": self.categories["is_shadow"],
+            "is_mega_or_primal": self.categories["is_mega_or_primal"],
         }
 
     def __repr__(self) -> str:
@@ -32,14 +32,16 @@ class PokemonModel(AbstractModel):
             f"PokemonModel(name={self.name!r}, api_name={self.api_name!r}, "
             f"types={self.types!r}, attacks={self.attacks!r}, "
             f"is_shiny_available={self.is_shiny_available!r}, "
-            f"is_shadow={self.is_shadow!r}, "
-            f"is_mega_or_primal={self.is_mega_or_primal!r})"
+            f"is_shadow={self.categories["is_shadow"]!r}, "
+            f"is_mega_or_primal={self.categories["is_mega_or_primal"]!r})"
         )
 
     def __str__(self) -> str:
         shiny_status = "Yes" if self.is_shiny_available else "No"
-        shadow_status = "Yes" if self.is_shadow else "No"
-        mega_or_primal_status = "Yes" if self.is_mega_or_primal else "No"
+        shadow_status = "Yes" if self.categories["is_shadow"] else "No"
+        mega_or_primal_status = (
+            "Yes" if self.categories["is_mega_or_primal"] else "No"
+        )
 
         attacks_str = "\n".join(
             (
@@ -62,27 +64,33 @@ class PokemonModel(AbstractModel):
     def categorize(self):
         name_lower = self.name.lower()
 
-        # Common Cases
-        self.is_shadow = "shadow" in name_lower
-        self._is_mega = "mega" in name_lower
-        self._is_primal = "primal" in name_lower
-        self._is_forme = "form" in name_lower
-        self._is_x_or_y = (
-            len(name_lower.split()) == 3
-            and name_lower.split()[2] in "xy"
-        )
+        self.categories = {
+            # Common Cases
+            "is_mega": "mega" in name_lower,
+            "is_primal": "primal" in name_lower,
+            "is_shadow": "shadow" in name_lower,
+            "is_forme": "form" in name_lower,
+            "is_x_or_y": (
+                len(self.name.split()) == 3
+                and self.name.split()[2] in "xy"
+            ),
 
-        # Specific Cases
-        self._is_genesect = "genesect" in name_lower
-        self._is_zacian = "zacian" in name_lower
-        self._is_hoopa = "hoopa" in name_lower
-        self._is_darmanitan = "darmanitan" in name_lower
-        self._is_tapu = "tapu" in name_lower
+            # Specific Cases
+            "is_genesect": "genesect" in name_lower,
+            "is_zacian": "zacian" in name_lower,
+            "is_hoopa": "hoopa" in name_lower,
+            "is_darmanitan": "darmanitan" in name_lower,
+            "is_tapu": "tapu" in name_lower,
 
-        # Region
-        self._is_alola = "alola" in name_lower
-        self._is_galar = "galar" in name_lower
-        self._is_hisui = "hisui" in name_lower
+            # Region
+            "is_alola": "alola" in name_lower,
+            "is_galar": "galar" in name_lower,
+            "is_hisui": "hisui" in name_lower,
+
+        }
 
         # Other
-        self.is_mega_or_primal = self._is_mega or self._is_primal
+        self.categories["is_mega_or_primal"] = (
+            self.categories["is_mega"]
+            or self.categories["is_primal"]
+        )
