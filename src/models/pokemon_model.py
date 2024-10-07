@@ -94,6 +94,7 @@ class PokemonModel(AbstractModel):
             ),
             "is_deoxys": "deoxys" in self.api_name,
             "is_keldeo": "keldeo" in self.api_name,
+            "is_zamazenta": "zamazenta" in self.api_name,
 
             # Regions
             "is_alola": "alola" in self.api_name,
@@ -178,6 +179,9 @@ class PokemonModel(AbstractModel):
         elif self.categories["is_keldeo"]:
             self._keldeo_case()
 
+        elif self.categories["is_zamazenta"]:
+            self._zamazenta_case()
+
     def _genesect_case(self):
         genesect_forms = {
             "douse": "10075",
@@ -226,6 +230,13 @@ class PokemonModel(AbstractModel):
             "keldeo-ordinary"
         )
 
+    def _zamazenta_case(self):
+        self._handle_pokemon_case(
+            "crowned" in self.api_name,
+            "zamazenta-crowned",
+            "zamazenta"
+        )
+
     def _handle_pokemon_case(
         self,
         condition: bool,
@@ -241,4 +252,3 @@ class PokemonModel(AbstractModel):
 # Casos que precisam de revisão especifica
 # Apex Shadow Ho-Oh
 # Shadow Mr. Rime
-# Zamazenta
