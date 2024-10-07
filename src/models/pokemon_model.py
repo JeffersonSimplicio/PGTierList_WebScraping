@@ -1,8 +1,10 @@
+from re import sub
 from src.models.abstract_model import AbstractModel
 
 
 class PokemonModel(AbstractModel):
     POKE_API = "https://pokeapi.co/api/v2/pokemon"
+    PATTERN = r'[^a-zA-Z0-9\s]'
 
     def __init__(
         self, name: str,
@@ -15,7 +17,7 @@ class PokemonModel(AbstractModel):
         self.is_shiny_available = is_shiny_available
         self.attacks = attacks
 
-        self.api_name = self.name.lower()
+        self.api_name = sub(self.PATTERN, "", self.name.lower())
 
         self.categorize()
         self._generate_poke_api()
@@ -195,8 +197,7 @@ class PokemonModel(AbstractModel):
 # Keldeo (Ordinary Forme)
 # Giratina
 # Deoxys
-# Sirfetch'd
 # Necrozma(Formas especiais)
 # Apex Shadow Ho-Oh
-# Sky Forme Shaymin
 # Shadow Mr. Rime
+# Zamazenta
