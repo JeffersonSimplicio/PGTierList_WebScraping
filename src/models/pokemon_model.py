@@ -92,6 +92,7 @@ class PokemonModel(AbstractModel):
                 "necrozma" in self.api_name
                 and len(self.api_name.split()) > 1
             ),
+            "is_deoxys": "deoxys" in self.api_name,
 
             # Regions
             "is_alola": "alola" in self.api_name,
@@ -109,11 +110,19 @@ class PokemonModel(AbstractModel):
         self._apply_common_cases()
         self._apply_specific_cases()
 
-        if any(
+        if self.categories["is_deoxys"]:
+            self.api_name = "-".join(self.api_name.lower().split())
+        elif any(
             [
                 self.categories[cat]
                 for cat
-                in ["is_mega", "is_primal", "is_forme", "is_alola", "is_hisui"]
+                in [
+                    "is_mega",
+                    "is_primal",
+                    "is_forme",
+                    "is_alola",
+                    "is_hisui"
+                ]
             ]
         ) or (
             self.categories["is_galar"]
@@ -221,9 +230,7 @@ class PokemonModel(AbstractModel):
 # Casos que precisam de revisão especifica
 # Forme precisam ser revisados, Keldeo é exceção
 # Keldeo (Ordinary Forme)
-# Giratina
 # Deoxys
-# Necrozma(Formas especiais)
 # Apex Shadow Ho-Oh
 # Shadow Mr. Rime
 # Zamazenta
