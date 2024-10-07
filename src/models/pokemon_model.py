@@ -88,6 +88,10 @@ class PokemonModel(AbstractModel):
             "is_hoopa": "hoopa" in self.api_name,
             "is_darmanitan": "darmanitan" in self.api_name,
             "is_tapu": "tapu" in self.api_name,
+            "is_necrozma_form": (
+                "necrozma" in self.api_name
+                and len(self.api_name.split()) > 1
+            ),
 
             # Regions
             "is_alola": "alola" in self.api_name,
@@ -158,6 +162,9 @@ class PokemonModel(AbstractModel):
         elif self.categories["is_darmanitan"]:
             self._darmanitan_case()
 
+        elif self.categories["is_necrozma_form"]:
+            self._necrozma_case()
+
     def _genesect_case(self):
         genesect_forms = {
             "douse": "10075",
@@ -190,6 +197,13 @@ class PokemonModel(AbstractModel):
             self.categories["is_galar"],
             "darmanitan-galar-standard",
             "darmanitan-standard"
+        )
+
+    def _necrozma_case(self):
+        self._handle_pokemon_case(
+            "dusk" in self.api_name,
+            "necrozma-dusk",
+            "necrozma-dawn"
         )
 
     def _handle_pokemon_case(
