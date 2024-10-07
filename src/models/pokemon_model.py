@@ -2,9 +2,7 @@ from src.models.abstract_model import AbstractModel
 
 
 class PokemonModel(AbstractModel):
-    POKE_API_BASE = "https://pokeapi.co/api/v2/"
-    API_POKE = f"{POKE_API_BASE}pokemon"
-    API_POKE_FORM = f"{POKE_API_BASE}pokemon-form"
+    POKE_API = "https://pokeapi.co/api/v2/pokemon"
 
     def __init__(
         self, name: str,
@@ -93,7 +91,6 @@ class PokemonModel(AbstractModel):
             "is_alola": "alola" in self.api_name,
             "is_galar": "galar" in self.api_name,
             "is_hisui": "hisui" in self.api_name,
-
         }
 
         # Other
@@ -120,11 +117,7 @@ class PokemonModel(AbstractModel):
         elif self.categories["is_tapu"]:
             self.api_name = "-".join(self.api_name.lower().split())
 
-        self.api_name = (
-            self.api_name
-            if self.API_POKE_FORM in self.api_name
-            else f"{self.API_POKE}/{self.api_name}"
-        )
+        self.api_name = f"{self.POKE_API}/{self.api_name}"
 
     def _apply_common_cases(self):
         common_cases = [
@@ -172,9 +165,9 @@ class PokemonModel(AbstractModel):
         }
         for form, form_id in genesect_forms.items():
             if form in self.api_name:
-                self.api_name = f"{self.API_POKE_FORM}/{form_id}"
+                self.api_name = form_id
                 return
-        self.api_name = f"{self.API_POKE_FORM}/649"  # normal form
+        self.api_name = "649"  # normal form
 
     def _zacian_case(self):
         self.api_name = (
@@ -203,7 +196,6 @@ class PokemonModel(AbstractModel):
 # Giratina
 # Deoxys
 # Sirfetch'd
-# Genesect(todos)
 # Necrozma(Formas especiais)
 # Apex Shadow Ho-Oh
 # Sky Forme Shaymin
