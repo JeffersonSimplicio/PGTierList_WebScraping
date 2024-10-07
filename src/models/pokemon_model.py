@@ -68,6 +68,8 @@ class PokemonModel(AbstractModel):
         )
 
     def categorize(self):
+        self._if_apex()
+
         self.categories = {
             # Common Cases
             "is_mega": "mega" in self.api_name,
@@ -249,6 +251,9 @@ class PokemonModel(AbstractModel):
             else false_case
         )
 
+    def _if_apex(self):
+        if self.api_name.split()[0].lower() == "apex":
+            self.api_name = ' '.join(self.api_name.split()[1:])
+
 # Casos que precisam de revisão especifica
-# Apex Shadow Ho-Oh
 # Shadow Mr. Rime
