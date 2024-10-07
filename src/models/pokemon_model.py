@@ -172,24 +172,36 @@ class PokemonModel(AbstractModel):
         self.api_name = "649"  # normal form
 
     def _zacian_case(self):
-        self.api_name = (
-            "zacian-crowned"
-            if "crowned" in self.api_name
-            else "zacian"
+        self._handle_pokemon_case(
+            "crowned" in self.api_name,
+            "zacian-crowned",
+            "zacian"
         )
 
     def _hoopa_case(self):
-        self.api_name = (
-            "hoopa-unbound"
-            if "unbound" in self.api_name
-            else "hoopa"
+        self._handle_pokemon_case(
+            "unbound" in self.api_name,
+            "hoopa-unbound",
+            "hoopa"
         )
 
     def _darmanitan_case(self):
+        self._handle_pokemon_case(
+            self.categories["is_galar"],
+            "darmanitan-galar-standard",
+            "darmanitan-standard"
+        )
+
+    def _handle_pokemon_case(
+        self,
+        condition: bool,
+        true_case: str,
+        false_case: str
+    ):
         self.api_name = (
-            "darmanitan-galar-standard"
-            if self.categories["is_galar"]
-            else "darmanitan-standard"
+            true_case
+            if condition
+            else false_case
         )
 
 # Casos que precisam de revisão especifica
