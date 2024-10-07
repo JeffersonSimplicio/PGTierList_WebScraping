@@ -99,6 +99,7 @@ class PokemonModel(AbstractModel):
             "is_zamazenta": "zamazenta" in self.api_name,
             "is_mr_rime": "rime" in self.api_name,
             "is_porygon": "porygon" in self.api_name,
+            "is_hooh": "hooh" in self.api_name,
 
             # Regions
             "is_alola": "alola" in self.api_name,
@@ -192,6 +193,9 @@ class PokemonModel(AbstractModel):
         elif self.categories["is_porygon"]:
             self._if_porygon()
 
+        elif self.categories["is_hooh"]:
+            self._if_hooh()
+
     def _genesect_case(self):
         genesect_forms = {
             "douse": "10075",
@@ -268,3 +272,6 @@ class PokemonModel(AbstractModel):
 
     def _if_porygon(self):
         self.api_name = "porygon-z"
+
+    def _if_hooh(self):
+        self.api_name = "ho-oh"
