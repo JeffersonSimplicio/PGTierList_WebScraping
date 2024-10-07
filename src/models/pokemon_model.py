@@ -93,6 +93,7 @@ class PokemonModel(AbstractModel):
                 and len(self.api_name.split()) > 1
             ),
             "is_deoxys": "deoxys" in self.api_name,
+            "is_keldeo": "keldeo" in self.api_name,
 
             # Regions
             "is_alola": "alola" in self.api_name,
@@ -174,6 +175,9 @@ class PokemonModel(AbstractModel):
         elif self.categories["is_necrozma_form"]:
             self._necrozma_case()
 
+        elif self.categories["is_keldeo"]:
+            self._keldeo_case()
+
     def _genesect_case(self):
         genesect_forms = {
             "douse": "10075",
@@ -215,6 +219,13 @@ class PokemonModel(AbstractModel):
             "necrozma-dawn"
         )
 
+    def _keldeo_case(self):
+        self._handle_pokemon_case(
+            "resolute" in self.api_name,
+            "keldeo-resolute",
+            "keldeo-ordinary"
+        )
+
     def _handle_pokemon_case(
         self,
         condition: bool,
@@ -228,9 +239,6 @@ class PokemonModel(AbstractModel):
         )
 
 # Casos que precisam de revisão especifica
-# Forme precisam ser revisados, Keldeo é exceção
-# Keldeo (Ordinary Forme)
-# Deoxys
 # Apex Shadow Ho-Oh
 # Shadow Mr. Rime
 # Zamazenta
