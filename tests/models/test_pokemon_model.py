@@ -23,3 +23,13 @@ def sample_pokemon(mock_poke_attack):
         is_shiny_available=True,
         attacks=[mock_poke_attack],
     )
+
+
+def test_init(sample_pokemon):
+    assert sample_pokemon.name == "Pikachu"
+    assert sample_pokemon.types == ["Electric"]
+    assert sample_pokemon.is_shiny_available is True
+    assert len(sample_pokemon.attacks) == 1
+    assert (
+        sample_pokemon.api_name == "https://pokeapi.co/api/v2/pokemon/pikachu"
+    )
