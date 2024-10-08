@@ -1,5 +1,6 @@
 from re import sub
 from src.models.abstract_model import AbstractModel
+from src.models.poke_attack_model import PokeAttackModel
 
 
 class PokemonModel(AbstractModel):
@@ -17,7 +18,7 @@ class PokemonModel(AbstractModel):
         name: str,
         types: list[str],
         is_shiny_available: bool,
-        attacks: list[dict[str, str]],
+        attacks: list[PokeAttackModel],
     ) -> None:
         self.name = name
         self.types = types
@@ -33,7 +34,7 @@ class PokemonModel(AbstractModel):
             "name": self.name,
             "api_name": self.api_name,
             "types": self.types,
-            "attacks": self.attacks,
+            "attacks": [attack.to_dict() for attack in self.attacks],
             "is_shiny_available": self.is_shiny_available,
             "is_shadow": self.categories["is_shadow"],
             "is_mega_or_primal": self.categories["is_mega_or_primal"],
@@ -61,12 +62,7 @@ class PokemonModel(AbstractModel):
         )
 
     def _format_attacks(self) -> str:
-        return "\n".join(
-            f"  Type: {attack['type']}, "
-            f"Fast Attack: {attack['fast_attack']}, "
-            f"Charged Attack: {attack['charged_attack']}"
-            for attack in self.attacks
-        )
+        return "\n".join(f"    {str(attack)}" for attack in self.attacks)
 
     def _categorize(self) -> dict[str, bool]:
         if self.api_name.split()[0].lower() == "apex":
@@ -78,8 +74,10 @@ class PokemonModel(AbstractModel):
             "is_primal": "primal" in self.api_name,
             "is_shadow": "shadow" in self.api_name.split(),
             "is_forme": "form" in self.api_name,
-            "is_x_or_y": len(self.api_name.split()) == 3
-            and self.api_name.split()[1] in "xy",
+            "is_x_or_y": (
+                len(self.api_name.split()) == 3
+                and self.api_name.split()[1] in "xy"
+            ),
 
             # Specific Cases
             "is_genesect": "genesect" in self.api_name,
@@ -87,8 +85,10 @@ class PokemonModel(AbstractModel):
             "is_hoopa": "hoopa" in self.api_name,
             "is_darmanitan": "darmanitan" in self.api_name,
             "is_tapu": "tapu" in self.api_name,
-            "is_necrozma_form": "necrozma" in self.api_name
-            and len(self.api_name.split()) > 1,
+            "is_necrozma_form": (
+                "necrozma" in self.api_name
+                and len(self.api_name.split()) > 1
+            ),
             "is_deoxys": "deoxys" in self.api_name,
             "is_keldeo": "keldeo" in self.api_name,
             "is_zamazenta": "zamazenta" in self.api_name,
