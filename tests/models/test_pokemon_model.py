@@ -57,3 +57,18 @@ def test_to_dict(sample_pokemon, mock_poke_attack):
         "is_shadow": False,
         "is_mega_or_primal": False,
     }
+
+
+def test_repr(sample_pokemon):
+    """Testa o método __repr__, ignorando o id dinâmico gerado pelo mock."""
+    result = repr(sample_pokemon)
+    assert (
+        "PokemonModel(name='Pikachu', "
+        "api_name='https://pokeapi.co/api/v2/pokemon/pikachu', "
+        "types=['Electric']"
+    ) in result
+    assert "attacks=[<Mock spec='PokeAttackModel'" in result
+    assert (
+        "is_shiny_available=True, is_shadow=False, is_mega_or_primal=False)"
+        in result
+    )
