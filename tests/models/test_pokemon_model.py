@@ -33,3 +33,27 @@ def test_init(sample_pokemon):
     assert (
         sample_pokemon.api_name == "https://pokeapi.co/api/v2/pokemon/pikachu"
     )
+
+
+def test_to_dict(sample_pokemon, mock_poke_attack):
+    mock_poke_attack.to_dict.return_value = {
+        "type": "Electric",
+        "fast_attack": "Quick Attack",
+        "charged_attack": "Thunderbolt",
+    }
+    result = sample_pokemon.to_dict()
+    assert result == {
+        "name": "Pikachu",
+        "api_name": "https://pokeapi.co/api/v2/pokemon/pikachu",
+        "types": ["Electric"],
+        "attacks": [
+            {
+                "type": "Electric",
+                "fast_attack": "Quick Attack",
+                "charged_attack": "Thunderbolt",
+            }
+        ],
+        "is_shiny_available": True,
+        "is_shadow": False,
+        "is_mega_or_primal": False,
+    }
