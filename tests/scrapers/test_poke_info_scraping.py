@@ -104,11 +104,15 @@ def test_get_attacks(scraper, mock_web_scraper):
     result = scraper.get_attacks()
 
     assert len(result) == 1
-    assert result[0] == {
+
+    # Comparar o resultado usando o método to_dict()
+    expected_attack = {
         "type": "Electric",
         "fast_attack": "Thunder Shock",
         "charged_attack": "Thunderbolt",
     }
+    assert result[0].to_dict() == expected_attack
+
     mock_soup.select_one.assert_called_once_with(
         "table.DataGrid_dataGrid__Q3gQi tbody"
     )
