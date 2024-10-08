@@ -102,3 +102,41 @@ def test_api_name_generation(name, expected_api_name):
         name=name, types=["Normal"], is_shiny_available=False, attacks=[]
     )
     assert pokemon.api_name == expected_api_name
+
+
+@pytest.mark.parametrize(
+    "name,expected_api_name",
+    [
+        (
+            "Mega Charizard X",
+            "https://pokeapi.co/api/v2/pokemon/charizard-mega-x"
+        ),
+        ("Alolan Raichu", "https://pokeapi.co/api/v2/pokemon/raichu-alola"),
+        (
+            "Galarian Darmanitan",
+            "https://pokeapi.co/api/v2/pokemon/darmanitan-galar-standard",
+        ),
+        ("Genesect (Douse Drive)", "https://pokeapi.co/api/v2/pokemon/10075"),
+        (
+            "Zacian (Crowned Sword)",
+            "https://pokeapi.co/api/v2/pokemon/zacian-crowned"
+        ),
+        ("Hoopa Unbound", "https://pokeapi.co/api/v2/pokemon/hoopa-unbound"),
+        (
+            "Necrozma Dusk Mane",
+            "https://pokeapi.co/api/v2/pokemon/necrozma-dusk"
+        ),
+        (
+            "Keldeo Resolute Form",
+            "https://pokeapi.co/api/v2/pokemon/keldeo-resolute"
+        ),
+        ("Mr. Rime", "https://pokeapi.co/api/v2/pokemon/mr-rime"),
+        ("Porygon-Z", "https://pokeapi.co/api/v2/pokemon/porygon-z"),
+        ("Ho-Oh", "https://pokeapi.co/api/v2/pokemon/ho-oh"),
+    ],
+)
+def test_generate_poke_api(name, expected_api_name):
+    pokemon = PokemonModel(
+        name=name, types=["Normal"], is_shiny_available=False, attacks=[]
+    )
+    assert pokemon.api_name == expected_api_name
