@@ -72,3 +72,17 @@ def test_repr(sample_pokemon):
         "is_shiny_available=True, is_shadow=False, is_mega_or_primal=False)"
         in result
     )
+
+
+def test_str(sample_pokemon, mock_poke_attack):
+    expected = (
+        "Pokemon: Pikachu "
+        "(API Name: https://pokeapi.co/api/v2/pokemon/pikachu)\n"
+        "Types: Electric\n"
+        "Attacks:\n"
+        "    Electric Attack - Fast: Quick Attack, Charged: Thunderbolt\n"
+        "Shiny Available: Yes\n"
+        "Shadow: No\n"
+        "Mega or Primal: No"
+    )
+    assert str(sample_pokemon) == expected
