@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from src.models.poke_attack_model import PokeAttackModel
 
 
 class PokeInfoAbstract(ABC):
@@ -15,5 +16,5 @@ class PokeInfoAbstract(ABC):
         pass
 
     @abstractmethod
-    def get_attacks(self) -> list[dict[str, str]]:
+    def get_attacks(self) -> list[PokeAttackModel]:
         pass
