@@ -1,11 +1,10 @@
 import json
-from src.pokemon_model import PokemonModel
-
 from src.models.poke_link_model import PokeLinkModel
 from src.models.poke_attack_model import PokeAttackModel
 from src.scraping.web_scraper import WebScraper
 from src.scraping.tier_list_abstract import TierListAbstract
 from src.scraping.poke_info_scraping import PokeInfoAbstract
+from src.models.pokemon_model import PokemonModel
 
 
 class PokeRankingJSON:
@@ -45,8 +44,8 @@ class PokeRankingJSON:
                 print(f"{counter} de {total_pokemons}, {percentage:.2f}%")
                 print(f"Resta: {total_pokemons-counter}")
                 poke_info_base = self.poke_info_scraping(
-                    self.poke_attack,
-                    self.scraper(self.link_base + link)
+                    self.scraper(self.link_base + link),
+                    self.poke_attack
                 )
                 poke_data = PokemonModel(
                     name,

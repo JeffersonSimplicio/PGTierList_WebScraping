@@ -7,8 +7,8 @@ from bs4.element import Tag
 class PokeInfoScraping(PokeInfoAbstract):
     def __init__(
             self,
-            poke_attack: type[PokeAttackModel],
-            scraper: WebScraper
+            scraper: WebScraper,
+            poke_attack: type[PokeAttackModel]
     ) -> None:
         _scraper = scraper
         self._soup = _scraper.setup_soup()
@@ -39,7 +39,7 @@ class PokeInfoScraping(PokeInfoAbstract):
         ]
         return list_types_string
 
-    def get_attacks(self) -> list[dict[str, str]]:
+    def get_attacks(self) -> list[PokeAttackModel]:
         tmp_attack = self.get_typing()
         table_body = self._soup.select_one(
             "table.DataGrid_dataGrid__Q3gQi tbody"
@@ -62,13 +62,13 @@ class PokeInfoScraping(PokeInfoAbstract):
                             type_charged_attack,
                             fast_attack,
                             charged_attack
-                        ).to_dict()
+                        )
                     )
                     if len(tmp_attack) == 0:
                         break
                 except ValueError:
                     pass
-        return attacks  # [attack.to_dict() for attack in attacks]
+        return attacks
 
     def _get_attack_type(self, tr: Tag, index: int) -> str:
         return tr.select_one(f"td:nth-child({index})")\
