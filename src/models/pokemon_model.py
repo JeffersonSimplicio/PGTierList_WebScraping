@@ -1,4 +1,4 @@
-from re import sub
+from re import sub, search, IGNORECASE
 from src.models.abstract_model import AbstractModel
 from src.models.poke_attack_model import PokeAttackModel
 
@@ -76,7 +76,7 @@ class PokemonModel(AbstractModel):
             "is_forme": "form" in self.api_name,
             "is_x_or_y": (
                 len(self.api_name.split()) == 3
-                and self.api_name.split()[1] in "xy"
+                and search(r'\bx\b|\by\b', self.api_name, IGNORECASE)
             ),
 
             # Specific Cases
@@ -113,6 +113,8 @@ class PokemonModel(AbstractModel):
 
         if self.categories["is_deoxys"]:
             self.api_name = "-".join(self.api_name.lower().split())
+        elif self.categories["is_x_or_y"]:
+            self._xy_case()
         elif any(
             self.categories[cat]
             for cat
@@ -140,10 +142,6 @@ class PokemonModel(AbstractModel):
                 .replace("form", "")
                 .strip()
             )
-
-        if self.categories["is_x_or_y"]:
-            name_parts = self.api_name.split()
-            self.api_name = f"{name_parts[2]}-{name_parts[0]}-{name_parts[1]}"
 
     def _apply_specific_cases(self) -> None:
         specific_cases = {
@@ -195,6 +193,22 @@ class PokemonModel(AbstractModel):
             ),
             "649",
         )
+
+    def _xy_case(self):
+        parts = self.api_name.lower().split()
+
+        if parts[0] == "mega":
+            if parts[-1] in ["x", "y"]:
+                pokemon_name = " ".join(parts[1:-1])
+                mega_type = parts[-1]
+            else:
+                pokemon_name = parts[-1]
+                mega_type = parts[1]
+        else:
+            pokemon_name = " ".join(parts[:-2])
+            mega_type = parts[-1]
+
+        self.api_name = f"{pokemon_name}-mega-{mega_type}"
 
     def _handle_pokemon_case(
         self, condition: bool, true_case: str, false_case: str
