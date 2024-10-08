@@ -86,3 +86,19 @@ def test_str(sample_pokemon, mock_poke_attack):
         "Mega or Primal: No"
     )
     assert str(sample_pokemon) == expected
+
+
+@pytest.mark.parametrize(
+    "name,expected_api_name",
+    [
+        ("Pikachu", "https://pokeapi.co/api/v2/pokemon/pikachu"),
+        ("Mr. Rime", "https://pokeapi.co/api/v2/pokemon/mr-rime"),
+        ("Farfetch'd", "https://pokeapi.co/api/v2/pokemon/farfetchd"),
+        ("Nidoran♀", "https://pokeapi.co/api/v2/pokemon/nidoran"),
+    ],
+)
+def test_api_name_generation(name, expected_api_name):
+    pokemon = PokemonModel(
+        name=name, types=["Normal"], is_shiny_available=False, attacks=[]
+    )
+    assert pokemon.api_name == expected_api_name
