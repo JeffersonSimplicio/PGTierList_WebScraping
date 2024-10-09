@@ -1,4 +1,5 @@
 import json
+from time import sleep
 from src.models.poke_link_model import PokeLinkModel
 from src.models.poke_attack_model import PokeAttackModel
 from src.scraping.web_scraper import WebScraper
@@ -43,6 +44,23 @@ class PokeRankingJSON:
                 print(f"Pokemon atual: {name}")
                 print(f"{counter} de {total_pokemons}, {percentage:.2f}%")
                 print(f"Resta: {total_pokemons-counter}")
+                poke_data = self.retry_execution(name, link)
+                tmp_tier_list.append(poke_data)
+            poke_tier_ranking[tier] = tmp_tier_list
+        return poke_tier_ranking
+
+    def retry_execution(
+        self,
+        name: str,
+        link: str,
+        attempt_limit: int = 2,
+        retry_delay_seconds: int = 3
+    ):
+        attempt = 0  # Contador de tentativas
+        success = False  # Flag de sucesso
+
+        while attempt < attempt_limit and not success:
+            try:
                 poke_info_base = self.poke_info_scraping(
                     self.scraper(self.link_base + link),
                     self.poke_attack
@@ -53,9 +71,15 @@ class PokeRankingJSON:
                     poke_info_base.is_shiny_available(),
                     poke_info_base.get_attacks(),
                 )
-                tmp_tier_list.append(poke_data.generate())
-            poke_tier_ranking[tier] = tmp_tier_list
-        return poke_tier_ranking
+                success = True  # Se a execução chegar aqui, foi bem-sucedida
+                return poke_data.to_dict()
+            except Exception as e:
+                print(f"Erro ao processar {name}: {e}")
+                print("Tentando novamente em 3 segundos...")
+                attempt += 1
+                # Espera {retry_delay_seconds} segundos
+                # antes de tentar novamente
+                sleep(retry_delay_seconds)
 
     def generate_json(self, file_name: str = "pg_tier_list", data="") -> None:
         if data == "":
