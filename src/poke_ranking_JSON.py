@@ -1,11 +1,11 @@
-import json
 from time import sleep
 from src.models.poke_link_model import PokeLinkModel
 from src.models.poke_attack_model import PokeAttackModel
+from src.models.pokemon_model import PokemonModel
 from src.scraping.web_scraper import WebScraper
 from src.scraping.tier_list_abstract import TierListAbstract
 from src.scraping.poke_info_scraping import PokeInfoAbstract
-from src.models.pokemon_model import PokemonModel
+from src.utilities.json_handler import JsonHandler
 
 
 class PokeRankingJSON:
@@ -81,14 +81,5 @@ class PokeRankingJSON:
                 # antes de tentar novamente
                 sleep(retry_delay_seconds)
 
-    def generate_json(self, file_name: str = "pg_tier_list", data="") -> None:
-        if data == "":
-            ranking = self.generate()
-        else:
-            ranking = data
-
-        if not file_name.endswith(".json"):
-            file_name = file_name + ".json"
-
-        with open(file_name, "w") as file:
-            json.dump(ranking, file)
+    def generate_json(self, file_name: str = "pg_tier_list") -> None:
+        JsonHandler(file_name).write(self.generate())
