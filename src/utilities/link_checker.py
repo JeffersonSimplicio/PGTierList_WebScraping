@@ -1,5 +1,5 @@
 from requests import get
-from src.utilities.json_Handler import JsonHandler
+from src.utilities.json_handler import JsonHandler
 from src.utilities.terminal import Terminal
 
 
