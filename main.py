@@ -18,4 +18,4 @@ ranking = PokeRankingJSON(
     LINK_TIER
 )
 
-ranking.generate()
+ranking.generate_json()
