@@ -25,14 +25,14 @@ class PokemonModel(AbstractModel):
         self.is_shiny_available = is_shiny_available
         self.attacks = attacks
 
-        self.api_name = sub(self.PATTERN, "", self.name.lower())
+        self.poke_api = sub(self.PATTERN, "", self.name.lower())
         self.categories = self._categorize()
         self._generate_poke_api()
 
     def to_dict(self) -> dict[str, any]:
         return {
             "name": self.name,
-            "api_name": self.api_name,
+            "poke_api": self.poke_api,
             "types": self.types,
             "attacks": [attack.to_dict() for attack in self.attacks],
             "is_shiny_available": self.is_shiny_available,
@@ -42,7 +42,7 @@ class PokemonModel(AbstractModel):
 
     def __repr__(self) -> str:
         return (
-            f"PokemonModel(name={self.name!r}, api_name={self.api_name!r}, "
+            f"PokemonModel(name={self.name!r}, poke_api={self.poke_api!r}, "
             f"types={self.types!r}, attacks={self.attacks!r}, "
             f"is_shiny_available={self.is_shiny_available!r}, "
             f"is_shadow={self.categories['is_shadow']!r}, "
@@ -51,7 +51,7 @@ class PokemonModel(AbstractModel):
 
     def __str__(self) -> str:
         return (
-            f"Pokemon: {self.name} (API Name: {self.api_name})\n"
+            f"Pokemon: {self.name} (API Link: {self.poke_api})\n"
             f"Types: {', '.join(self.types)}\n"
             f"Attacks:\n{self._format_attacks()}\n"
             f"Shiny Available: {'Yes' if self.is_shiny_available else 'No'}\n"
@@ -65,41 +65,41 @@ class PokemonModel(AbstractModel):
         return "\n".join(f"    {str(attack)}" for attack in self.attacks)
 
     def _categorize(self) -> dict[str, bool]:
-        if self.api_name.split()[0].lower() == "apex":
-            self.api_name = " ".join(self.api_name.split()[1:])
+        if self.poke_api.split()[0].lower() == "apex":
+            self.poke_api = " ".join(self.poke_api.split()[1:])
 
         categories = {
             # Common Cases
-            "is_mega": "mega" in self.api_name,
-            "is_primal": "primal" in self.api_name,
-            "is_shadow": "shadow" in self.api_name.split(),
-            "is_forme": "form" in self.api_name,
+            "is_mega": "mega" in self.poke_api,
+            "is_primal": "primal" in self.poke_api,
+            "is_shadow": "shadow" in self.poke_api.split(),
+            "is_forme": "form" in self.poke_api,
             "is_x_or_y": (
-                len(self.api_name.split()) == 3
-                and search(r'\bx\b|\by\b', self.api_name, IGNORECASE)
+                len(self.poke_api.split()) == 3
+                and search(r'\bx\b|\by\b', self.poke_api, IGNORECASE)
             ),
 
             # Specific Cases
-            "is_genesect": "genesect" in self.api_name,
-            "is_zacian": "zacian" in self.api_name,
-            "is_hoopa": "hoopa" in self.api_name,
-            "is_darmanitan": "darmanitan" in self.api_name,
-            "is_tapu": "tapu" in self.api_name,
+            "is_genesect": "genesect" in self.poke_api,
+            "is_zacian": "zacian" in self.poke_api,
+            "is_hoopa": "hoopa" in self.poke_api,
+            "is_darmanitan": "darmanitan" in self.poke_api,
+            "is_tapu": "tapu" in self.poke_api,
             "is_necrozma_form": (
-                "necrozma" in self.api_name
-                and len(self.api_name.split()) > 1
+                "necrozma" in self.poke_api
+                and len(self.poke_api.split()) > 1
             ),
-            "is_deoxys": "deoxys" in self.api_name,
-            "is_keldeo": "keldeo" in self.api_name,
-            "is_zamazenta": "zamazenta" in self.api_name,
-            "is_mr_rime": "rime" in self.api_name,
-            "is_porygon": "porygon" in self.api_name,
-            "is_hooh": "hooh" in self.api_name,
+            "is_deoxys": "deoxys" in self.poke_api,
+            "is_keldeo": "keldeo" in self.poke_api,
+            "is_zamazenta": "zamazenta" in self.poke_api,
+            "is_mr_rime": "rime" in self.poke_api,
+            "is_porygon": "porygon" in self.poke_api,
+            "is_hooh": "hooh" in self.poke_api,
 
             # Regions
-            "is_alola": "alola" in self.api_name,
-            "is_galar": "galar" in self.api_name,
-            "is_hisui": "hisui" in self.api_name,
+            "is_alola": "alola" in self.poke_api,
+            "is_galar": "galar" in self.poke_api,
+            "is_hisui": "hisui" in self.poke_api,
         }
 
         categories["is_mega_or_primal"] = (
@@ -112,7 +112,7 @@ class PokemonModel(AbstractModel):
         self._apply_specific_cases()
 
         if self.categories["is_deoxys"]:
-            self.api_name = "-".join(self.api_name.lower().split())
+            self.poke_api = "-".join(self.poke_api.lower().split())
         elif self.categories["is_x_or_y"]:
             self._xy_case()
         elif any(
@@ -123,20 +123,20 @@ class PokemonModel(AbstractModel):
             self.categories["is_galar"]
             and not self.categories["is_darmanitan"]
         ):
-            self.api_name = "-".join(reversed(self.api_name.lower().split()))
+            self.poke_api = "-".join(reversed(self.poke_api.lower().split()))
         elif self.categories["is_tapu"]:
-            self.api_name = "-".join(self.api_name.lower().split())
+            self.poke_api = "-".join(self.poke_api.lower().split())
 
-        self.api_name = f"{self.POKE_API}/{self.api_name}"
+        self.poke_api = f"{self.POKE_API}/{self.poke_api}"
 
     def _apply_common_cases(self) -> None:
         for category, old, new in self.COMMON_CASES:
             if self.categories[category]:
-                self.api_name = self.api_name.replace(old, new).strip()
+                self.poke_api = self.poke_api.replace(old, new).strip()
 
         if self.categories["is_forme"]:
-            self.api_name = (
-                self.api_name.replace("(", "")
+            self.poke_api = (
+                self.poke_api.replace("(", "")
                 .replace(")", "")
                 .replace("forme", "")
                 .replace("form", "")
@@ -147,10 +147,10 @@ class PokemonModel(AbstractModel):
         specific_cases = {
             "is_genesect": self._genesect_case,
             "is_zacian": lambda: self._handle_pokemon_case(
-                "crowned" in self.api_name, "zacian-crowned", "zacian"
+                "crowned" in self.poke_api, "zacian-crowned", "zacian"
             ),
             "is_hoopa": lambda: self._handle_pokemon_case(
-                "unbound" in self.api_name, "hoopa-unbound", "hoopa"
+                "unbound" in self.poke_api, "hoopa-unbound", "hoopa"
             ),
             "is_darmanitan": lambda: self._handle_pokemon_case(
                 self.categories["is_galar"],
@@ -158,19 +158,19 @@ class PokemonModel(AbstractModel):
                 "darmanitan-standard",
             ),
             "is_necrozma_form": lambda: self._handle_pokemon_case(
-                "dusk" in self.api_name, "necrozma-dusk", "necrozma-dawn"
+                "dusk" in self.poke_api, "necrozma-dusk", "necrozma-dawn"
             ),
             "is_keldeo": lambda: self._handle_pokemon_case(
-                "resolute" in self.api_name,
+                "resolute" in self.poke_api,
                 "keldeo-resolute",
                 "keldeo-ordinary"
             ),
             "is_zamazenta": lambda: self._handle_pokemon_case(
-                "crowned" in self.api_name, "zamazenta-crowned", "zamazenta"
+                "crowned" in self.poke_api, "zamazenta-crowned", "zamazenta"
             ),
-            "is_mr_rime": lambda: setattr(self, "api_name", "mr-rime"),
-            "is_porygon": lambda: setattr(self, "api_name", "porygon-z"),
-            "is_hooh": lambda: setattr(self, "api_name", "ho-oh"),
+            "is_mr_rime": lambda: setattr(self, "poke_api", "mr-rime"),
+            "is_porygon": lambda: setattr(self, "poke_api", "porygon-z"),
+            "is_hooh": lambda: setattr(self, "poke_api", "ho-oh"),
         }
 
         for category, handler in specific_cases.items():
@@ -185,17 +185,17 @@ class PokemonModel(AbstractModel):
             "shock": "10076",
             "chill": "10078",
         }
-        self.api_name = next(
+        self.poke_api = next(
             (
                 form_id
                 for form, form_id in genesect_forms.items()
-                if form in self.api_name
+                if form in self.poke_api
             ),
             "649",
         )
 
     def _xy_case(self):
-        parts = self.api_name.lower().split()
+        parts = self.poke_api.lower().split()
 
         if parts[0] == "mega":
             if parts[-1] in ["x", "y"]:
@@ -208,9 +208,9 @@ class PokemonModel(AbstractModel):
             pokemon_name = " ".join(parts[:-2])
             mega_type = parts[-1]
 
-        self.api_name = f"{pokemon_name}-mega-{mega_type}"
+        self.poke_api = f"{pokemon_name}-mega-{mega_type}"
 
     def _handle_pokemon_case(
         self, condition: bool, true_case: str, false_case: str
     ) -> None:
-        self.api_name = true_case if condition else false_case
+        self.poke_api = true_case if condition else false_case

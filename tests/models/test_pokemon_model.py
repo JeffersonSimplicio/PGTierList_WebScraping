@@ -31,7 +31,7 @@ def test_init(sample_pokemon):
     assert sample_pokemon.is_shiny_available is True
     assert len(sample_pokemon.attacks) == 1
     assert (
-        sample_pokemon.api_name == "https://pokeapi.co/api/v2/pokemon/pikachu"
+        sample_pokemon.poke_api == "https://pokeapi.co/api/v2/pokemon/pikachu"
     )
 
 
@@ -44,7 +44,7 @@ def test_to_dict(sample_pokemon, mock_poke_attack):
     result = sample_pokemon.to_dict()
     assert result == {
         "name": "Pikachu",
-        "api_name": "https://pokeapi.co/api/v2/pokemon/pikachu",
+        "poke_api": "https://pokeapi.co/api/v2/pokemon/pikachu",
         "types": ["Electric"],
         "attacks": [
             {
@@ -64,7 +64,7 @@ def test_repr(sample_pokemon):
     result = repr(sample_pokemon)
     assert (
         "PokemonModel(name='Pikachu', "
-        "api_name='https://pokeapi.co/api/v2/pokemon/pikachu', "
+        "poke_api='https://pokeapi.co/api/v2/pokemon/pikachu', "
         "types=['Electric']"
     ) in result
     assert "attacks=[<Mock spec='PokeAttackModel'" in result
@@ -77,7 +77,7 @@ def test_repr(sample_pokemon):
 def test_str(sample_pokemon, mock_poke_attack):
     expected = (
         "Pokemon: Pikachu "
-        "(API Name: https://pokeapi.co/api/v2/pokemon/pikachu)\n"
+        "(API Link: https://pokeapi.co/api/v2/pokemon/pikachu)\n"
         "Types: Electric\n"
         "Attacks:\n"
         "    Electric Attack - Fast: Quick Attack, Charged: Thunderbolt\n"
@@ -101,7 +101,7 @@ def test_api_name_generation(name, expected_api_name):
     pokemon = PokemonModel(
         name=name, types=["Normal"], is_shiny_available=False, attacks=[]
     )
-    assert pokemon.api_name == expected_api_name
+    assert pokemon.poke_api == expected_api_name
 
 
 @pytest.mark.parametrize(
@@ -139,4 +139,4 @@ def test_generate_poke_api(name, expected_api_name):
     pokemon = PokemonModel(
         name=name, types=["Normal"], is_shiny_available=False, attacks=[]
     )
-    assert pokemon.api_name == expected_api_name
+    assert pokemon.poke_api == expected_api_name
