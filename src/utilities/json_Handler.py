@@ -22,8 +22,8 @@ class JsonHandler:
             self.file_path = self.file_path+".json"
 
         try:
-            with open(self.file_path, 'w') as file:
-                json.dump(data, file, indent=indent)
+            with open(self.file_path, 'w', encoding='utf-8') as file:
+                json.dump(data, file, indent=indent, ensure_ascii=False)
         except Exception as e:
             print(f"Erro ao escrever no arquivo: {e}")
 
