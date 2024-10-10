@@ -153,4 +153,5 @@ cython_debug/
 
 # default name of the generated file
 pg_tier_list.json
+pg_move_list.json
 broken_links.txt
