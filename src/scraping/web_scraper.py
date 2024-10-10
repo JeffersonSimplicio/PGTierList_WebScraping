@@ -1,32 +1,16 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
+from src.scraping.scraper_abstract import ScraperAbstract
 
 
-class WebScraper:
+class WebScraper(ScraperAbstract):
     def __init__(self, url: str) -> None:
         self.driver = webdriver.Edge()
         self.driver.get(url)
         self.source = self.driver.page_source
 
-    def get_page_source(self) -> str:
-        return self.source
-
-    def save_page_to_file(self, file_name: str) -> None:
-        with open(file_name, "w", encoding="utf-8") as html_file:
-            html_file.write(self.source)
-
-    def close_drive(self) -> None:
-        try:
-            if self.driver:
-                self.driver.quit()
-        except OSError as e:
-            print(f"Error closing driver: {e}")
-
     def setup_soup(self) -> BeautifulSoup:
-        source = self.get_page_source()
-        self.close_drive()
+        source = super().get_page_source()
+        super().close_drive()
         soup = BeautifulSoup(source, "html.parser")
         return soup
-
-    def __del__(self) -> None:
-        self.close_drive()
