@@ -14,7 +14,7 @@ class LinkChecker:
             print(f"Tier atual: {tier}")
             for poke_info in poke_list:
                 poke_name = poke_info["name"]
-                poke_link = poke_info["api_name"]
+                poke_link = poke_info["poke_api"]
                 print(f"Pokemon em analise: {poke_name}")
                 print(f"Link do Pokemon em analise: {poke_link}")
 
