@@ -11,39 +11,71 @@ class Terminal:
             system("cls")
 
     @staticmethod
-    def success(message: str):
+    def _print_message(style, *args, sep=" ", end="\n"):
+        """Exibe uma mensagem com o estilo fornecido."""
+        message = sep.join(map(str, args))
+        print(f"{style}{message}{TerminalStyles.RESET}", end=end)
+
+    @staticmethod
+    def default(*args, sep=" ", end="\n"):
+        """Simula o comportamento do print sem personalizações."""
+        print(sep.join(map(str, args)), end=end)
+
+    @staticmethod
+    def success(*args, sep=" ", end="\n"):
         """Exibe uma mensagem de sucesso em verde."""
-        print(f"{TerminalStyles.GREEN}{message}{TerminalStyles.RESET}")
+        Terminal._print_message(TerminalStyles.GREEN, *args, sep=sep, end=end)
 
     @staticmethod
-    def warning(message: str):
+    def warning(*args, sep=" ", end="\n"):
         """Exibe uma mensagem de aviso em amarelo."""
-        print(f"{TerminalStyles.YELLOW}{message}{TerminalStyles.RESET}")
+        Terminal._print_message(TerminalStyles.YELLOW, *args, sep=sep, end=end)
 
     @staticmethod
-    def error(message: str):
+    def error(*args, sep=" ", end="\n"):
         """Exibe uma mensagem de erro em vermelho."""
-        print(f"{TerminalStyles.RED}{message}{TerminalStyles.RESET}")
+        Terminal._print_message(TerminalStyles.RED, *args, sep=sep, end=end)
 
     @staticmethod
-    def info(message: str):
+    def info(*args, sep=" ", end="\n"):
         """Exibe uma mensagem de informação em azul."""
-        print(f"{TerminalStyles.BLUE}{message}{TerminalStyles.RESET}")
+        Terminal._print_message(TerminalStyles.BLUE, *args, sep=sep, end=end)
 
     @staticmethod
-    def bold(message: str):
+    def bold(*args, sep=" ", end="\n"):
         """Exibe uma mensagem em negrito."""
-        print(f"{TerminalStyles.BOLD}{message}{TerminalStyles.RESET}")
+        Terminal._print_message(TerminalStyles.BOLD, *args, sep=sep, end=end)
 
     @staticmethod
-    def italic(message: str):
+    def italic(*args, sep=" ", end="\n"):
         """Exibe uma mensagem em itálico."""
-        print(f"{TerminalStyles.ITALIC}{message}{TerminalStyles.RESET}")
+        Terminal._print_message(TerminalStyles.ITALIC, *args, sep=sep, end=end)
 
     @staticmethod
-    def underline(message: str):
+    def underline(*args, sep=" ", end="\n"):
         """Exibe uma mensagem sublinhada."""
-        print(f"{TerminalStyles.UNDERLINE}{message}{TerminalStyles.RESET}")
+        Terminal._print_message(
+            TerminalStyles.UNDERLINE,
+            *args,
+            sep=sep,
+            end=end
+        )
+
+    @staticmethod
+    def colored_message(*args, color: str = None, sep=" ", end="\n"):
+        """Permite ao usuário selecionar uma das cores disponíveis."""
+        try:
+            message = sep.join(map(str, args))
+            selected_color = Terminal._select_color(color)
+            if selected_color:
+                print(
+                    f"{selected_color}{message}{TerminalStyles.RESET}",
+                    end=end
+                )
+            else:
+                print(message, end=end)
+        except ValueError as e:
+            print(f"{TerminalStyles.RED}Erro: {e}{TerminalStyles.RESET}")
 
     @staticmethod
     def _select_color(color: str):
@@ -67,15 +99,3 @@ class Terminal:
                 f"Cor '{color}' inválida. "
                 f"Escolha entre: {', '.join(valid_colors.keys())}"
             )
-
-    @staticmethod
-    def colored_message(message: str, color: str = None):
-        """Permite ao usuário selecionar uma das cores disponíveis."""
-        try:
-            selected_color = Terminal._select_color(color)
-            if selected_color:
-                print(f"{selected_color}{message}{TerminalStyles.RESET}")
-            else:
-                print(message)
-        except ValueError as e:
-            print(f"{TerminalStyles.RED}Erro: {e}{TerminalStyles.RESET}")
