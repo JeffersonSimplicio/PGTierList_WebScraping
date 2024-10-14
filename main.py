@@ -29,7 +29,7 @@ class PokemonCLI:
         self.get_pokemon_list()
 
     def exit_program(self):
-        print("Saindo do programa. Até a proxima!")
+        Terminal.info("Saindo do programa. Até a proxima!")
         exit(0)
 
     def display_menu(self):
@@ -50,8 +50,10 @@ class PokemonCLI:
                 action()
                 break
             else:
-                print("Escolha inválida, por favor, ", end="")
-                print("insira um número entre 1 e 4.")
+                Terminal.warning(
+                    "Escolha inválida, por favor,",
+                    "insira um número entre 1 e 4."
+                )
                 sleep(3)
 
 
