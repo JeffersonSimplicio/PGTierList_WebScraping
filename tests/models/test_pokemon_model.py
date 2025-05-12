@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import Mock
 from src.models.poke_attack_model import PokeAttackModel
-from src.models.pokemon_model import PokemonModel
+from models.pokemon_model_old import PokemonModel
 
 
 @pytest.fixture

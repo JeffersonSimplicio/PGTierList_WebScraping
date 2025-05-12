@@ -2,7 +2,7 @@ import concurrent.futures
 from time import sleep
 from src.models.poke_link_model import PokeLinkModel
 from src.models.poke_attack_model import PokeAttackModel
-from src.models.pokemon_model import PokemonModel
+from models.pokemon_model_old import PokemonModel
 from src.scraping.web_scraper import WebScraper
 from src.scraping.tier_list_abstract import TierListAbstract
 from src.scraping.poke_info_scraping import PokeInfoAbstract

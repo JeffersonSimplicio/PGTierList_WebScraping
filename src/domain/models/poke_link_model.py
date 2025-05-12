@@ -1,4 +1,4 @@
-from src.models.abstract_model import AbstractModel
+from src.domain.models.abstract_model import AbstractModel
 
 
 class PokeLinkModel(AbstractModel):
