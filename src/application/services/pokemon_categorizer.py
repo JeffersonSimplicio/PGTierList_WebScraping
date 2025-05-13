@@ -1,13 +1,13 @@
 from re import search, IGNORECASE
 from src.domain.services.classifier import Classifier
-from src.domain.services.poke_name_sanitizer import PokeNameSanitizer
+from domain.services.sanitizer import Sanitizer
 
 
 class PokemonCategorizer(Classifier):
     def __init__(
         self,
         keyword_categories: list[str],
-        name_sanitizer: PokeNameSanitizer | None = None
+        name_sanitizer: Sanitizer | None = None
     ) -> None:
         self.keyword_categories = keyword_categories
         self._name_sanitizer = name_sanitizer

@@ -1,6 +1,6 @@
 from typing import Protocol
 
 
-class PokeNameSanitizer(Protocol):
+class Sanitizer(Protocol):
     def sanitize(self, name: str) -> str:
         pass
