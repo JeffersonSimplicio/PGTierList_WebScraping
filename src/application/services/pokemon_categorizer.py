@@ -24,7 +24,7 @@ class PokemonCategorizer(Classifier):
             "is_genesect": self._has("genesect"),
             "is_zacian": self._has("zacian"),
             "is_hoopa": self._has("hoopa"),
-            "is_darmanitan": self,
+            "is_darmanitan": self._has("darmanitan"),
             "is_tapu": self._has("tapu"),
             "is_necrozma_form": self._is_necrozma_form(),
             "is_deoxys": self._has("deoxys"),
