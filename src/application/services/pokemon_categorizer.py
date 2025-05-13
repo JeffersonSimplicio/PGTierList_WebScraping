@@ -19,19 +19,14 @@ class PokemonCategorizer(Classifier):
             "is_primal": self._has("primal"),
             "is_shadow": self._has("shadow"),
             "is_forme": self._has("form"),
-            "is_x_or_y": (
-                len(self._pokemon_name.split()) == 3
-                and search(r"\bx\b|\by\b", self._pokemon_name, IGNORECASE)
-            ),
+            "is_x_or_y": self._is_x_or_y(),
             # Specific Cases
             "is_genesect": self._has("genesect"),
             "is_zacian": self._has("zacian"),
             "is_hoopa": self._has("hoopa"),
             "is_darmanitan": self,
             "is_tapu": self._has("tapu"),
-            "is_necrozma_form": (
-                self._has("necrozma") and len(self._pokemon_name.split()) > 1
-            ),
+            "is_necrozma_form": self._is_necrozma_form(),
             "is_deoxys": self._has("deoxys"),
             "is_keldeo": self._has("keldeo"),
             "is_zamazenta": self._has("zamazenta"),
@@ -56,3 +51,11 @@ class PokemonCategorizer(Classifier):
 
     def _has(self, term: str) -> bool:
         return term in self._pokemon_name
+
+    def _is_x_or_y(self):
+        return len(self._pokemon_name.split()) == 3 and bool(
+            search(r"\bx\b|\by\b", self._pokemon_name, IGNORECASE)
+        )
+
+    def _is_necrozma_form(self):
+        return self._has("necrozma") and len(self._pokemon_name.split()) > 1
