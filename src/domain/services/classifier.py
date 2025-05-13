@@ -1,7 +1,6 @@
-from abc import ABC, abstractmethod
+from typing import Protocol
 
 
-class Classifier(ABC):
-    @abstractmethod
+class Classifier(Protocol):
     def classify(self, pokemon_name: str) -> dict[str, bool]:
         pass
