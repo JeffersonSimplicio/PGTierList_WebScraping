@@ -2,5 +2,5 @@ from typing import Protocol
 
 
 class UrlGenerator(Protocol):
-    def generate(self, name: str, id, categories: dict[str, bool]) -> str:
+    def generate(self, name: str, categories: dict[str, bool]) -> str:
         pass
