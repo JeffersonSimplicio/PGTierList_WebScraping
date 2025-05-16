@@ -1,4 +1,4 @@
-from typing import ClassVar
+from typing import ClassVar, Optional
 
 
 class SpecialCaseHandler:
@@ -41,7 +41,7 @@ class SpecialCaseHandler:
 
     def _handle_conditional_cases(
         self, categories: dict[str, bool]
-    ) -> str | None:
+    ) -> Optional[str]:
         for (
             category,
             (key, true_case, false_case),
