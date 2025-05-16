@@ -1,5 +1,5 @@
 from selenium import webdriver
-from domain.entities.scraping.html_scraper_interface import (
+from src.data.scraping.html_scraper_interface import (
     HtmlScraperInterface,
 )
 
