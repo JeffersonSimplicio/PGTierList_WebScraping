@@ -1,0 +1,13 @@
+from typing import Protocol, TypeVar, Optional
+
+T = TypeVar("T", covariant=True)
+
+
+class ScraperAbstract(Protocol[T]):
+    def fetch_html(self) -> str: ...
+
+    def close(self) -> None: ...
+
+    def __enter__(self) -> T: ...
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> Optional[bool]: ...
