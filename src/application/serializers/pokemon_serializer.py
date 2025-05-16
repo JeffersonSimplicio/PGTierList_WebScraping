@@ -1,12 +1,14 @@
+from src.domain.protocols.serializer_protocol import SerializerProtocol
+from typing import Any
 from src.domain.entities.pokemon import Pokemon
 from src.application.serializers.poke_attack_serializer import (
     PokeAttackSerializer,
 )
 
 
-class PokemonSerializer:
+class PokemonSerializer(SerializerProtocol[Pokemon, Any]):
     @staticmethod
-    def serialize(pokemon: Pokemon) -> dict:
+    def serialize(pokemon: Pokemon) -> dict[str, Any]:
         return {
             "id": pokemon.id,
             "name": pokemon.name,

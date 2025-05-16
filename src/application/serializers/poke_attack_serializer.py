@@ -1,7 +1,8 @@
+from src.domain.protocols.serializer_protocol import SerializerProtocol
 from src.domain.entities.poke_attack import PokeAttack
 
 
-class PokeAttackSerializer:
+class PokeAttackSerializer(SerializerProtocol[PokeAttack, str]):
     @staticmethod
     def serialize(attack: PokeAttack) -> dict[str, str]:
         return {
