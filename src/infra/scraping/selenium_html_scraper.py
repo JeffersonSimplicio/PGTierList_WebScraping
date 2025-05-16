@@ -1,8 +1,10 @@
 from selenium import webdriver
-from src.domain.entities.scraping.scraper_abstract import ScraperAbstract
+from domain.entities.scraping.html_scraper_interface import (
+    HtmlScraperInterface,
+)
 
 
-class SeleniumWebScraper(ScraperAbstract["SeleniumWebScraper"]):
+class SeleniumHtmlScraper(HtmlScraperInterface["SeleniumHtmlScraper"]):
     def __init__(self, url: str) -> None:
         self._driver = webdriver.Edge()
         self._driver.get(url)
@@ -18,7 +20,7 @@ class SeleniumWebScraper(ScraperAbstract["SeleniumWebScraper"]):
         except OSError as e:
             print(f"Error closing driver: {e}")
 
-    def __enter__(self) -> "SeleniumWebScraper":
+    def __enter__(self) -> "SeleniumHtmlScraper":
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
