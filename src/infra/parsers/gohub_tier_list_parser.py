@@ -22,14 +22,14 @@ class GoHubTierListHtmlParser(TierListHtmlParserInterface):
         self._serializer = serializer
 
     def parse(self) -> dict[str, list[dict[str, str]]]:
-        return self.get_ranking_dict(self._get_soup())
+        return self._extract_tier_rankings(self._get_soup())
 
     def _get_soup(self) -> BeautifulSoup:
         with self._html_scraper as scraper:
             html: str = scraper.fetch_html()
         return BeautifulSoup(html, "html.parser")
 
-    def get_ranking_dict(
+    def _extract_tier_rankings(
         self,
         soup: BeautifulSoup
     ) -> dict[str, list[dict[str, str]]]:
