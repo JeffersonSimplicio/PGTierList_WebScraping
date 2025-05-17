@@ -4,7 +4,6 @@ from bs4.element import Tag
 from typing import Type
 from src.domain.protocols.serializer_protocol import SerializerProtocol
 from src.domain.entities.poke_link import PokeLink
-from src.data.scraping.html_scraper_interface import HtmlScraperInterface
 from src.data.parsers.tier_list_html_parser_interface import (
     TierListHtmlParserInterface,
 )
@@ -13,21 +12,14 @@ from src.data.parsers.tier_list_html_parser_interface import (
 class GoHubTierListHtmlParser(TierListHtmlParserInterface):
     def __init__(
         self,
-        html_scraper: HtmlScraperInterface,
         poke_link_factory: Callable[[str, str], PokeLink],
         serializer: Type[SerializerProtocol],
     ) -> None:
-        self._html_scraper = html_scraper
         self._poke_link_factory = poke_link_factory
         self._serializer = serializer
 
-    def parse(self) -> dict[str, list[dict[str, str]]]:
-        return self._extract_tier_rankings(self._get_soup())
-
-    def _get_soup(self) -> BeautifulSoup:
-        with self._html_scraper as scraper:
-            html: str = scraper.fetch_html()
-        return BeautifulSoup(html, "html.parser")
+    def parse(self, soup: BeautifulSoup) -> dict[str, list[dict[str, str]]]:
+        return self._extract_tier_rankings(soup)
 
     def _extract_tier_rankings(
         self,
