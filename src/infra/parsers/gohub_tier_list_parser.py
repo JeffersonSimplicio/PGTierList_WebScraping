@@ -10,6 +10,8 @@ from src.data.parsers.tier_list_html_parser_interface import (
 
 
 class GoHubTierListHtmlParser(TierListHtmlParserInterface):
+    GOHUB_LINK_BASE = "https://db.pokemongohub.net/"
+
     def __init__(
         self,
         poke_link_factory: Callable[[str, str], PokeLink],
@@ -60,5 +62,6 @@ class GoHubTierListHtmlParser(TierListHtmlParserInterface):
         name = poke_cell.find(
             "span", class_="PokemonCard_pokemonCardContent___wx3G"
         ).text
-        poke_link = self._poke_link_factory(name, link)
+        full_url = self.GOHUB_LINK_BASE + link
+        poke_link = self._poke_link_factory(name, full_url)
         return self._serializer.serialize(poke_link)
