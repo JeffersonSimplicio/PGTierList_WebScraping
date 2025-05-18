@@ -21,9 +21,9 @@ class GoHubTierListHtmlParser(TierListHtmlParserInterface):
         self._serializer = serializer
 
     def parse(self, soup: BeautifulSoup) -> dict[str, list[dict[str, str]]]:
-        return self._extract_tier_rankings(soup)
+        return self._match_tiers_with_pokemon(soup)
 
-    def _extract_tier_rankings(
+    def _match_tiers_with_pokemon(
         self,
         soup: BeautifulSoup
     ) -> dict[str, list[dict[str, str]]]:
