@@ -1,8 +1,6 @@
 from typing import Callable
 from bs4 import BeautifulSoup
 from bs4.element import Tag
-from typing import Type
-from src.domain.protocols.serializer_protocol import SerializerProtocol
 from src.domain.entities.poke_link import PokeLink
 from src.data.parsers.tier_list_html_parser_interface import (
     TierListHtmlParserInterface,
@@ -15,10 +13,8 @@ class GoHubTierListHtmlParser(TierListHtmlParserInterface):
     def __init__(
         self,
         poke_link_factory: Callable[[str, str], PokeLink],
-        serializer: Type[SerializerProtocol],
     ) -> None:
         self._poke_link_factory = poke_link_factory
-        self._serializer = serializer
 
     def parse(self, soup: BeautifulSoup) -> dict[str, list[dict[str, str]]]:
         return self._match_tiers_with_pokemon(soup)
@@ -63,5 +59,4 @@ class GoHubTierListHtmlParser(TierListHtmlParserInterface):
             "span", class_="PokemonCard_pokemonCardContent___wx3G"
         ).text
         full_url = self.GOHUB_LINK_BASE + link
-        poke_link = self._poke_link_factory(name, full_url)
-        return self._serializer.serialize(poke_link)
+        return self._poke_link_factory(name, full_url)
