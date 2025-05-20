@@ -130,7 +130,6 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
 
     def _generate_pokemon(self, soup: BeautifulSoup) -> Pokemon:
         name = self._extract_name(soup)
-        print(name)
         types = self._extract_types(soup)
         categories = self._generate_categories(name)
 

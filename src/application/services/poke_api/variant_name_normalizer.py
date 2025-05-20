@@ -3,8 +3,8 @@ from typing import ClassVar
 
 class VariantNameNormalizer:
     REPLACEMENTS: ClassVar[list[tuple[str, str, str]]] = [
-        ("is_forme", "forme", ""),
-        ("is_shadow", "shadow", ""),
+        ("is_form", "forme ", ""),
+        ("is_shadow", "shadow ", ""),
         ("is_alola", "alolan", "alola"),
         ("is_galar", "galarian", "galar"),
         ("is_hisui", "hisuian", "hisui"),

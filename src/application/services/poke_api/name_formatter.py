@@ -39,7 +39,7 @@ class NameFormatter:
         requires_special_name_formatting = [
             "is_mega",
             "is_primal",
-            "is_forme",
+            "is_form",
             "is_alola",
             "is_hisui",
         ]
