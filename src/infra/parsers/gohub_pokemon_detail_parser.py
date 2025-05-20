@@ -34,6 +34,21 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
     def parse(self, soup: BeautifulSoup) -> dict:
         return self._generate_pokemon(soup)
 
+    def _generate_pokemon(self, soup: BeautifulSoup) -> Pokemon:
+        name = self._extract_name(soup)
+        types = self._extract_types(soup)
+        categories = self._generate_categories(name)
+
+        return self._pokemon_factory(
+            id=self._extract_id(soup),
+            name=name,
+            types=types,
+            attacks=self._extract_attacks(soup, types),
+            is_shiny_available=self._extract_shiny(soup),
+            categories=categories,
+            api_url=self._generate_api_url(name, categories),
+        )
+
     def _extract_id(self, soup: BeautifulSoup) -> int:
         pokedex_th = soup.find("th", string="Pokédex Number")
         numero = (
@@ -41,7 +56,7 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
             .text.strip()
             .replace("#", "")
         )
-        return numero
+        return int(numero)
 
     def _extract_name(self, soup: BeautifulSoup) -> str:
         return soup.find("h1", id="overview-and-stats").text.strip()
@@ -127,18 +142,3 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
         categories: dict[str, bool]
     ) -> str:
         return self._url_generator.generate(poke_name, categories)
-
-    def _generate_pokemon(self, soup: BeautifulSoup) -> Pokemon:
-        name = self._extract_name(soup)
-        types = self._extract_types(soup)
-        categories = self._generate_categories(name)
-
-        return self._pokemon_factory(
-            id=self._extract_id(soup),
-            name=name,
-            types=types,
-            attacks=self._extract_attacks(soup, types),
-            is_shiny_available=self._extract_shiny(soup),
-            categories=categories,
-            api_url=self._generate_api_url(name, categories),
-        )
