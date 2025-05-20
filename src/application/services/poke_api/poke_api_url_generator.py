@@ -11,7 +11,7 @@ from src.application.services.poke_api.name_formatter import (
 
 
 class PokeApiUrlGenerator(UrlGenerator):
-    BASE_URL = "https://pokeapi.co/api/v2/pokemon/"
+    BASE_URL = "https://pokeapi.co/api/v2/"
 
     def __init__(self) -> None:
         self._normalizer = VariantNameNormalizer()
@@ -30,8 +30,8 @@ class PokeApiUrlGenerator(UrlGenerator):
         )
 
         if special_case_url_part:
-            return self.BASE_URL + special_case_url_part
+            return self.BASE_URL + "pokemon-form/" + special_case_url_part
 
         formatted_name = self._formatter.format(normalized_name, categories)
 
-        return self.BASE_URL + formatted_name
+        return self.BASE_URL + "pokemon/" + formatted_name
