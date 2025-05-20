@@ -18,6 +18,11 @@ class PokemonSerializer(SerializerProtocol[Pokemon, Any]):
                 for attack in pokemon.attacks
             ],
             "is_shiny_available": pokemon.is_shiny_available,
-            "categories": pokemon.categories,
+            # "categories": pokemon.categories,
+            "categories": {
+                "is_mega": pokemon.is_in_category("is_mega"),
+                "is_primal": pokemon.is_in_category("is_primal"),
+                "is_shadow": pokemon.is_in_category("is_shadow"),
+            },
             "url_api": pokemon.api_url,
         }
