@@ -28,8 +28,26 @@ class HtmlAdapter(ABC):
         pass
 
     @abstractmethod
+    def find_element_by_tag_from(
+        self, element: Any, tag: str
+    ) -> Optional[Any]:
+        pass
+
+    @abstractmethod
+    def find_element_by_tag_and_class_from(
+        self, element: Any, tag: str, class_name: str
+    ) -> Optional[Any]:
+        pass
+
+    @abstractmethod
     def find_all_elements_by_tag_and_class(
         self, tag: str, class_name: str
+    ) -> List[Any]:
+        pass
+
+    @abstractmethod
+    def find_all_elements_by_tag_and_class_from(
+        self, element: Any, tag: str, class_name: str
     ) -> List[Any]:
         pass
 

@@ -38,12 +38,27 @@ class BeautifulSoupHtmlAdapter(HtmlAdapter):
             return None
         return self._soup.find(tag, class_=class_name)
 
+    def find_element_by_tag_from(
+        self, element: Tag, tag: str
+    ) -> Optional[Tag]:
+        return element.find(tag)
+
+    def find_element_by_tag_and_class_from(
+        self, element: Tag, tag: str, class_name: str
+    ) -> Optional[Tag]:
+        return element.find(tag, class_=class_name)
+
     def find_all_elements_by_tag_and_class(
         self, tag: str, class_name: str
     ) -> List[Tag]:
         if not self._soup:
             return []
         return self._soup.find_all(tag, class_=class_name)
+
+    def find_all_elements_by_tag_and_class_from(
+        self, element: Tag, tag: str, class_name: str
+    ) -> List[Tag]:
+        return element.find_all(tag, class_=class_name)
 
     def select_element(self, css_selector: str) -> Optional[Tag]:
         if not self._soup:
