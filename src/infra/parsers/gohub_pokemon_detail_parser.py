@@ -1,5 +1,5 @@
-from typing import Callable
-from bs4 import BeautifulSoup, PageElement
+from typing import Any, Callable
+from src.domain.adapters.html_adapter import HtmlAdapter
 from src.domain.services.url_generator import UrlGenerator
 from src.domain.services.classifier import Classifier
 from src.domain.entities.pokemon import Pokemon
@@ -12,6 +12,7 @@ from src.data.parsers.pokemon_detail_html_parser_interface import (
 class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
     def __init__(
         self,
+        html_adapter: HtmlAdapter,
         pokemon_factory: Callable[
             [
                 int,
@@ -27,54 +28,64 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
         classifier: Classifier,
         url_generator: UrlGenerator,
     ) -> None:
+        self._html_adapter = html_adapter
         self._pokemon_factory = pokemon_factory
         self._classifier = classifier
         self._url_generator = url_generator
 
-    def parse(self, soup: BeautifulSoup) -> dict:
-        return self._generate_pokemon(soup)
+    def parse(self) -> Pokemon:
+        return self._generate_pokemon()
 
-    def _generate_pokemon(self, soup: BeautifulSoup) -> Pokemon:
-        name = self._extract_name(soup)
-        types = self._extract_types(soup)
+    def _generate_pokemon(self) -> Pokemon:
+        name = self._extract_name()
+        types = self._extract_types()
         categories = self._generate_categories(name)
 
         return self._pokemon_factory(
-            id=self._extract_id(soup),
+            id=self._extract_id(),
             name=name,
             types=types,
-            attacks=self._extract_attacks(soup, types),
-            is_shiny_available=self._extract_shiny(soup),
+            attacks=self._extract_attacks(types),
+            is_shiny_available=self._extract_shiny(),
             categories=categories,
             api_url=self._generate_api_url(name, categories),
         )
 
-    def _extract_id(self, soup: BeautifulSoup) -> int:
-        pokedex_th = soup.find("th", string="Pokédex Number")
-        numero = (
-            pokedex_th.find_next_sibling("td")
-            .text.strip()
-            .replace("#", "")
+    def _extract_id(self) -> int:
+        pokedex_th = self._html_adapter.find_element_by_tag_and_string(
+            "th",
+            string="Pokédex Number"
         )
-        return int(numero)
+        td = self._html_adapter.find_next_sibling(pokedex_th, "td")
+        poke_id = self._html_adapter.get_element_text(td).replace("#", "")
+        return int(poke_id)
 
-    def _extract_name(self, soup: BeautifulSoup) -> str:
-        return soup.find("h1", id="overview-and-stats").text.strip()
+    def _extract_name(self) -> str:
+        h1_element = self._html_adapter.find_element_by_id(
+            "overview-and-stats"
+        )
+        return self._html_adapter.get_element_text(h1_element)
 
-    def _extract_types(self, soup: BeautifulSoup) -> list[str]:
-        typing_span = soup.find(
-            "span", class_="PokemonPageRenderers_officialImageTyping__BZQBp"
+    def _extract_types(self) -> list[str]:
+        typing_span = self._html_adapter.find_element_by_tag_and_class(
+            "span",
+            "PokemonPageRenderers_officialImageTyping__BZQBp"
         )
         titles = []
-        for img in typing_span.find_all("img", recursive=False):
-            titles.append(img.get("title"))
+        for img in self._html_adapter.find_all_elements_by_tag(
+            typing_span,
+            "img",
+            recursive=False
+        ):
+            title = self._html_adapter.get_element_attribute(img, "title")
+            titles.append(title)
         return titles
 
-    def _extract_attacks(
-        self, soup: BeautifulSoup, types: list[str]
-    ) -> list[PokeAttack]:
+    def _extract_attacks(self, types: list[str]) -> list[PokeAttack]:
         tmp_types = types.copy()
-        table_body = soup.select_one("table.DataGrid_dataGrid__Q3gQi tbody")
+        table_body = self._html_adapter.select_element(
+            "table.DataGrid_dataGrid__Q3gQi tbody"
+        )
 
         if table_body is None:
             return []
@@ -104,7 +115,7 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
                     continue
 
         if len(attacks) == 0:
-            tr = table_body.select_one("tr:first-child")
+            tr = self._html_adapter.select_one(table_body, "tr:first-child")
             if tr:
                 type_charged_attack = self._get_attack_type(tr, 3)
                 fast_attack = self._get_attack_name(tr, 2)
@@ -118,18 +129,27 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
                 )
         return attacks
 
-    def _get_attack_type(self, tr: PageElement, index: int) -> str:
-        return tr.select_one(f"td:nth-child({index})")\
-            .find("img")\
-            .get("title")\
-            .strip()
+    def _get_attack_type(self, tr: Any, index: int) -> str:
+        td_element = self._html_adapter.select_one(
+            tr,
+            f"td:nth-child({index}) a"
+        )
+        img = self._html_adapter.select_one(
+            td_element,
+            "img"
+        )
+        return self._html_adapter.get_element_attribute(img, "title").strip()
 
-    def _get_attack_name(self, tr: PageElement, index: int) -> str:
-        return tr.select_one(f"td:nth-child({index}) a").text.strip()
+    def _get_attack_name(self, tr: Any, index: int) -> str:
+        td_element = self._html_adapter.select_one(
+            tr,
+            f"td:nth-child({index}) a"
+        )
+        return self._html_adapter.get_element_text(td_element)
 
-    def _extract_shiny(self, soup: BeautifulSoup) -> bool:
-        shiny_element = soup.find_all(
-            "span", class_="PokemonPageRenderers_ornamentIcon__ffCq5"
+    def _extract_shiny(self) -> bool:
+        shiny_element = self._html_adapter.find_all_elements_by_tag_and_class(
+            "span", "PokemonPageRenderers_ornamentIcon__ffCq5"
         )
         return len(shiny_element) == 2
 
