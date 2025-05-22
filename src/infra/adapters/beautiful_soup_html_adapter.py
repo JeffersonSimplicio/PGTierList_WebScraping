@@ -13,88 +13,36 @@ class BeautifulSoupHtmlAdapter(HtmlAdapter):
         self._soup = BeautifulSoup(html_content, "html.parser")
         return self._soup
 
-    def set_soup(self, soup: BeautifulSoup) -> None:
-        self._soup = soup
-
     def get_soup(self) -> BeautifulSoup:
         return self._soup
 
-    def find_element_by_id(self, id_value: str) -> Optional[Tag]:
-        if not self._soup:
-            return None
-        return self._soup.find(id=id_value)
+    def find(self, *args, in_element=None, **kwargs):
+        context = in_element or self._soup
+        return context.find(*args, **kwargs)
 
-    def find_element_by_tag_and_string(
-        self, tag: str, string: str
-    ) -> Optional[Tag]:
-        if not self._soup:
-            return None
-        return self._soup.find(tag, string=string)
-
-    def find_element_by_tag_and_class(
-        self, tag: str, class_name: str
-    ) -> Optional[Tag]:
-        if not self._soup:
-            return None
-        return self._soup.find(tag, class_=class_name)
-
-    def find_element_by_tag_from(
-        self, element: Tag, tag: str
-    ) -> Optional[Tag]:
-        return element.find(tag)
-
-    def find_element_by_tag_and_class_from(
-        self, element: Tag, tag: str, class_name: str
-    ) -> Optional[Tag]:
-        return element.find(tag, class_=class_name)
-
-    def find_all_elements_by_tag_and_class(
-        self, tag: str, class_name: str
-    ) -> List[Tag]:
-        if not self._soup:
-            return []
-        return self._soup.find_all(tag, class_=class_name)
-
-    def find_all_elements_by_tag_and_class_from(
-        self, element: Tag, tag: str, class_name: str
-    ) -> List[Tag]:
-        return element.find_all(tag, class_=class_name)
-
-    def select_element(self, css_selector: str) -> Optional[Tag]:
-        if not self._soup:
-            return None
-        return self._soup.select_one(css_selector)
-
-    def select_all_elements(self, css_selector: str) -> List[Tag]:
-        if not self._soup:
-            return []
-        return self._soup.select(css_selector)
-
-    def select_one(self, element: Tag, css_selector: str) -> Optional[Tag]:
-        return element.select_one(css_selector)
-
-    def get_element_attribute(
-        self, element: Tag, attribute: str
-    ) -> Optional[str]:
-        if not element:
-            return None
-        return element.get(attribute)
-
-    def get_element_text(self, element: Tag) -> str:
-        if not element:
-            return ""
-        return element.text.strip()
+    def find_all(self, *args, in_element=None, **kwargs) -> List[Tag]:
+        context = in_element or self._soup
+        return context.find_all(*args, **kwargs)
 
     def find_next_sibling(
-        self, element: Tag, tag: str
+        self, *args, in_element: Tag, **kwargs
     ) -> Optional[Tag]:
-        if not element:
-            return None
-        return element.find_next_sibling(tag)
+        return in_element.find_next_sibling(*args, **kwargs)
 
-    def find_all_elements_by_tag(
-        self, element: Tag, tag: str, recursive: bool = True
+    def select(
+        self, *args, in_element: Optional[Tag] = None, **kwargs
+    ) -> Optional[Tag]:
+        context = in_element or self._soup
+        return context.select_one(*args, **kwargs)
+
+    def select_all(
+        self, *args, in_element: Optional[Tag] = None, **kwargs
     ) -> List[Tag]:
-        if not element:
-            return []
-        return element.find_all(tag, recursive=recursive)
+        context = in_element or self._soup
+        return context.select(*args, **kwargs)
+
+    def get_attr(self, *args, in_element: Tag, **kwargs) -> Optional[str]:
+        return in_element.get(*args, **kwargs)
+
+    def get_text(self, in_element: Tag) -> Optional[str]:
+        return in_element.get_text(strip=True)

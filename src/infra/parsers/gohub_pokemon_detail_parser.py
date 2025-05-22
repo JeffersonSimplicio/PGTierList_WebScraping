@@ -52,38 +52,41 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
         )
 
     def _extract_id(self) -> int:
-        pokedex_th = self._html_adapter.find_element_by_tag_and_string(
+        pokedex_th = self._html_adapter.find(
             "th",
             string="Pokédex Number"
         )
-        td = self._html_adapter.find_next_sibling(pokedex_th, "td")
-        poke_id = self._html_adapter.get_element_text(td).replace("#", "")
+        td = self._html_adapter.find_next_sibling(
+            "td",
+            in_element=pokedex_th
+        )
+        poke_id = self._html_adapter.get_text(td).replace("#", "")
         return int(poke_id)
 
     def _extract_name(self) -> str:
-        h1_element = self._html_adapter.find_element_by_id(
-            "overview-and-stats"
+        h1_element = self._html_adapter.find(
+            id="overview-and-stats",
         )
-        return self._html_adapter.get_element_text(h1_element)
+        return self._html_adapter.get_text(h1_element)
 
     def _extract_types(self) -> list[str]:
-        typing_span = self._html_adapter.find_element_by_tag_and_class(
+        typing_span = self._html_adapter.find(
             "span",
-            "PokemonPageRenderers_officialImageTyping__BZQBp"
+            class_="PokemonPageRenderers_officialImageTyping__BZQBp"
         )
         titles = []
-        for img in self._html_adapter.find_all_elements_by_tag(
-            typing_span,
+        for img in self._html_adapter.find_all(
             "img",
-            recursive=False
+            recursive=False,
+            in_element=typing_span,
         ):
-            title = self._html_adapter.get_element_attribute(img, "title")
+            title = self._html_adapter.get_attr("title", in_element=img)
             titles.append(title)
         return titles
 
     def _extract_attacks(self, types: list[str]) -> list[PokeAttack]:
         tmp_types = types.copy()
-        table_body = self._html_adapter.select_element(
+        table_body = self._html_adapter.select(
             "table.DataGrid_dataGrid__Q3gQi tbody"
         )
 
@@ -130,26 +133,26 @@ class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
         return attacks
 
     def _get_attack_type(self, tr: Any, index: int) -> str:
-        td_element = self._html_adapter.select_one(
-            tr,
-            f"td:nth-child({index}) a"
+        td_element = self._html_adapter.select(
+            f"td:nth-child({index}) a",
+            in_element=tr
         )
-        img = self._html_adapter.select_one(
-            td_element,
-            "img"
+        img = self._html_adapter.select(
+            "img",
+            in_element=td_element
         )
-        return self._html_adapter.get_element_attribute(img, "title").strip()
+        return self._html_adapter.get_attr("title", in_element=img).strip()
 
     def _get_attack_name(self, tr: Any, index: int) -> str:
-        td_element = self._html_adapter.select_one(
-            tr,
-            f"td:nth-child({index}) a"
+        td_element = self._html_adapter.select(
+            f"td:nth-child({index}) a",
+            in_element=tr
         )
-        return self._html_adapter.get_element_text(td_element)
+        return self._html_adapter.get_text(td_element)
 
     def _extract_shiny(self) -> bool:
-        shiny_element = self._html_adapter.find_all_elements_by_tag_and_class(
-            "span", "PokemonPageRenderers_ornamentIcon__ffCq5"
+        shiny_element = self._html_adapter.find_all(
+            "span", class_="PokemonPageRenderers_ornamentIcon__ffCq5"
         )
         return len(shiny_element) == 2
 

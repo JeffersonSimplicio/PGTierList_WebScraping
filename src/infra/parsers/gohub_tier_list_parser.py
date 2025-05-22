@@ -14,8 +14,8 @@ class GoHubTierListHtmlParser(TierListHtmlParserInterface):
         html_adapter: HtmlAdapter,
         poke_link_factory: Callable[[str, str], PokeLink],
     ) -> None:
-        self._poke_link_factory = poke_link_factory
         self._html_adapter = html_adapter
+        self._poke_link_factory = poke_link_factory
 
     def parse(self) -> dict[str, list[dict[str, str]]]:
         return self._match_tiers_with_pokemon()
@@ -32,41 +32,46 @@ class GoHubTierListHtmlParser(TierListHtmlParserInterface):
         return dict_ranking
 
     def _extract_tier_names(self) -> list[str]:
-        h1_elements = self._html_adapter.select_all_elements(
+        h1_elements = self._html_adapter.select_all(
             "article.Card_stickyTitle__1CATW h1.Card_cardTitle__URr_A"
         )
         return [h1.text for h1 in h1_elements]
 
     def _extract_tier_lists(self) -> list[Any]:
-        return self._html_adapter.find_all_elements_by_tag_and_class(
+        return self._html_adapter.find_all(
             "ul",
-            "best-attackers_grid__WYqUF"
+            class_="best-attackers_grid__WYqUF"
         )
 
     def _parse_tier(self, tier_html: Any) -> list[dict[str, str]]:
         tier_data = []
-        ranking_tier = self._html_adapter\
-            .find_all_elements_by_tag_and_class_from(
-                tier_html,
-                "li",
-                "best-attackers_gridItem__thuKE"
-            )
+        ranking_tier = self._html_adapter.find_all(
+            "li",
+            class_="best-attackers_gridItem__thuKE",
+            in_element=tier_html,
+        )
         for poke_cell in ranking_tier:
             poke_data = self._parse_pokemon(poke_cell)
             tier_data.append(poke_data)
         return tier_data
 
     def _parse_pokemon(self, poke_cell: Any) -> dict[str, str]:
-        link_element = self._html_adapter.find_element_by_tag_from(
-            poke_cell,
-            "a"
+        link_element = self._html_adapter.find(
+            "a",
+            class_="PokemonCard_pokemonCard__jxCzI",
+            in_element=poke_cell
         )
-        link = self._html_adapter.get_element_attribute(link_element, "href")
-        name_element = self._html_adapter.find_element_by_tag_and_class_from(
-            poke_cell,
+        link = self._html_adapter.get_attr(
+            "href", in_element=link_element
+        ).strip()
+
+        name_element = self._html_adapter.find(
             "span",
-            "PokemonCard_pokemonCardContent___wx3G"
+            class_="PokemonCard_pokemonCardContent___wx3G",
+            in_element=poke_cell
         )
-        name = self._html_adapter.get_element_text(name_element)
+        name = self._html_adapter.get_text(name_element)
+
         full_url = self.GOHUB_LINK_BASE + link
+
         return self._poke_link_factory(name, full_url)
