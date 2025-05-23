@@ -4,7 +4,7 @@ from src.domain.use_case.fetch_pokemon_detail_use_case import (
 )
 from src.domain.services.html_adapter import HtmlAdapter
 from src.domain.services.url_generator import UrlGenerator
-from domain.services.categorization.classifier import Classifier
+from src.domain.services.categorization.classifier import Classifier
 from src.domain.entities.pokemon import Pokemon
 from src.domain.entities.poke_attack import PokeAttack
 
@@ -48,7 +48,7 @@ class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
             attacks=self._extract_attacks(types),
             is_shiny_available=self._extract_shiny(),
             categories=categories,
-            api_url=self._generate_api_url(name, categories),
+            url_api=self._generate_url_api(name, categories),
         )
 
     def _extract_id(self) -> int:
@@ -159,7 +159,7 @@ class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
     def _generate_categories(self, poke_name: str) -> dict[str, bool]:
         return self._classifier.classify(poke_name)
 
-    def _generate_api_url(
+    def _generate_url_api(
         self,
         poke_name: str,
         categories: dict[str, bool]
