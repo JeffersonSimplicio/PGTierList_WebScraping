@@ -1,7 +1,9 @@
 from typing import Any
 from src.domain.entities.pokemon import Pokemon
 from src.domain.protocols.serializer import Serializer
-from src.infra.serializers.poke_attack_serializer import PokeAttackSerializer
+from src.application.data.serializers.poke_attack_serializer import (
+    PokeAttackSerializer
+)
 
 
 class PokemonSerializer(Serializer[Pokemon, Any]):
