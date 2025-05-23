@@ -3,7 +3,7 @@ from typing import Protocol, TypeVar, Optional
 T = TypeVar("T", covariant=True)
 
 
-class HtmlScraperInterface(Protocol[T]):
+class HtmlScraper(Protocol[T]):
     def fetch_html(self) -> str: ...
 
     def close(self) -> None: ...

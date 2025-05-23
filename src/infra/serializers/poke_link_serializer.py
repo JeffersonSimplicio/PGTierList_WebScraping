@@ -1,8 +1,8 @@
-from src.domain.protocols.serializer_protocol import SerializerProtocol
+from src.domain.protocols.serializer import Serializer
 from src.domain.entities.poke_link import PokeLink
 
 
-class PokeLinkSerializer(SerializerProtocol[PokeLink, str]):
+class PokeLinkSerializer(Serializer[PokeLink, str]):
     @staticmethod
     def serialize(poke_link: PokeLink) -> dict[str, str]:
         return {

@@ -1,6 +1,6 @@
 from re import search, IGNORECASE
-from src.domain.services.classifier import Classifier
-from src.domain.services.sanitizer import Sanitizer
+from src.domain.services.categorization.classifier import Classifier
+from src.domain.services.sanitization.sanitizer import Sanitizer
 
 
 class PokemonCategorizer(Classifier):

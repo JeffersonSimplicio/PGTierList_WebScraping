@@ -1,6 +1,6 @@
 from typing import Optional, List
 from bs4 import BeautifulSoup, Tag
-from src.domain.adapters.html_adapter import HtmlAdapter
+from src.domain.services.html_adapter import HtmlAdapter
 
 
 class BeautifulSoupHtmlAdapter(HtmlAdapter):

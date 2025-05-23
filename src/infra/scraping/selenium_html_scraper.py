@@ -1,10 +1,10 @@
 from selenium import webdriver
-from src.data.scraping.html_scraper_interface import (
-    HtmlScraperInterface,
+from src.domain.services.html_scraper import (
+    HtmlScraper,
 )
 
 
-class SeleniumHtmlScraper(HtmlScraperInterface["SeleniumHtmlScraper"]):
+class SeleniumHtmlScraper(HtmlScraper["SeleniumHtmlScraper"]):
     def __init__(self, url: str) -> None:
         self._driver = webdriver.Edge()
         self._driver.get(url)

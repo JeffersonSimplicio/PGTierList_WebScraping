@@ -10,7 +10,7 @@ class Pokemon:
         attacks: list[PokeAttack],
         is_shiny_available: bool,
         categories: dict[str, bool],
-        api_url: str,
+        url_api: str,
     ) -> None:
         self.id = id
         self.name = name
@@ -18,7 +18,7 @@ class Pokemon:
         self.attacks = attacks
         self.is_shiny_available = is_shiny_available
         self.categories = categories
-        self.api_url = api_url
+        self.url_api = url_api
 
     def is_in_category(self, category: str) -> bool:
         return self.categories.get(category, False)

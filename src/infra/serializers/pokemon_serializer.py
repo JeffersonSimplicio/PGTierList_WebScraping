@@ -1,12 +1,10 @@
-from src.domain.protocols.serializer_protocol import SerializerProtocol
 from typing import Any
 from src.domain.entities.pokemon import Pokemon
-from src.application.serializers.poke_attack_serializer import (
-    PokeAttackSerializer,
-)
+from src.domain.protocols.serializer import Serializer
+from src.infra.serializers.poke_attack_serializer import PokeAttackSerializer
 
 
-class PokemonSerializer(SerializerProtocol[Pokemon, Any]):
+class PokemonSerializer(Serializer[Pokemon, Any]):
     @staticmethod
     def serialize(pokemon: Pokemon) -> dict[str, Any]:
         return {
@@ -24,5 +22,5 @@ class PokemonSerializer(SerializerProtocol[Pokemon, Any]):
                 "is_primal": pokemon.is_in_category("is_primal"),
                 "is_shadow": pokemon.is_in_category("is_shadow"),
             },
-            "url_api": pokemon.api_url,
+            "url_api": pokemon.url_api,
         }

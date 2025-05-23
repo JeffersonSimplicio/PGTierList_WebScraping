@@ -1,5 +1,5 @@
 from typing import Protocol, Any
 
 
-class PokemonDetailHtmlParserInterface(Protocol):
+class FetchPokemonDetailUseCase(Protocol):
     def parse(self, html: str) -> Any: ...

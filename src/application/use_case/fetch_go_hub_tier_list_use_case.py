@@ -1,12 +1,12 @@
 from typing import Any, Callable
-from src.domain.adapters.html_adapter import HtmlAdapter
 from src.domain.entities.poke_link import PokeLink
-from src.data.parsers.tier_list_html_parser_interface import (
-    TierListHtmlParserInterface,
+from src.domain.services.html_adapter import HtmlAdapter
+from src.domain.use_case.fetch_pokemon_list_by_tier_use_case import (
+    FetchPokemonListByTierUseCase
 )
 
 
-class GoHubTierListHtmlParser(TierListHtmlParserInterface):
+class FetchGoHubPokemonTierListUseCase(FetchPokemonListByTierUseCase):
     GOHUB_LINK_BASE = "https://db.pokemongohub.net/"
 
     def __init__(

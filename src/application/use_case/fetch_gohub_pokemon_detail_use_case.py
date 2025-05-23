@@ -1,15 +1,15 @@
 from typing import Any, Callable
-from src.domain.adapters.html_adapter import HtmlAdapter
+from src.domain.use_case.fetch_pokemon_detail_use_case import (
+    FetchPokemonDetailUseCase
+)
+from src.domain.services.html_adapter import HtmlAdapter
 from src.domain.services.url_generator import UrlGenerator
-from src.domain.services.classifier import Classifier
+from domain.services.categorization.classifier import Classifier
 from src.domain.entities.pokemon import Pokemon
 from src.domain.entities.poke_attack import PokeAttack
-from src.data.parsers.pokemon_detail_html_parser_interface import (
-    PokemonDetailHtmlParserInterface,
-)
 
 
-class GoHubPokemonDetailHtmlParser(PokemonDetailHtmlParserInterface):
+class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
     def __init__(
         self,
         html_adapter: HtmlAdapter,

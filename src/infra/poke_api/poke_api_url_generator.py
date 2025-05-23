@@ -1,13 +1,7 @@
 from src.domain.services.url_generator import UrlGenerator
-from src.application.services.poke_api.variant_name_normalizer import (
-    VariantNameNormalizer,
-)
-from src.application.services.poke_api.special_case_handler import (
-    SpecialCaseHandler,
-)
-from src.application.services.poke_api.name_formatter import (
-    NameFormatter,
-)
+from src.infra.poke_api.name_formatter import NameFormatter
+from src.infra.poke_api.special_case_handler import SpecialCaseHandler
+from src.infra.poke_api.variant_name_normalizer import VariantNameNormalizer
 
 
 class PokeApiUrlGenerator(UrlGenerator):

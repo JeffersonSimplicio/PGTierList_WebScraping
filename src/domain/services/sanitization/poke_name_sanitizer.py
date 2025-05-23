@@ -1,5 +1,5 @@
 from re import sub
-from src.domain.services.sanitizer import Sanitizer
+from src.domain.services.sanitization.sanitizer import Sanitizer
 
 
 class PokeNameSanitizer(Sanitizer):
