@@ -1,12 +1,10 @@
 from typing import Any, Callable
+from src.domain.services.html_adapter import HtmlAdapter
+from src.domain.entities.pokemon import Pokemon
+from src.domain.entities.poke_attack import PokeAttack
 from src.domain.use_case.fetch_pokemon_detail_use_case import (
     FetchPokemonDetailUseCase
 )
-from src.domain.services.html_adapter import HtmlAdapter
-from src.domain.services.url_generator import UrlGenerator
-from src.domain.services.categorization.classifier import Classifier
-from src.domain.entities.pokemon import Pokemon
-from src.domain.entities.poke_attack import PokeAttack
 
 
 class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
@@ -25,13 +23,9 @@ class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
             ],
             Pokemon,
         ],
-        classifier: Classifier,
-        url_generator: UrlGenerator,
     ) -> None:
         self._html_adapter = html_adapter
         self._pokemon_factory = pokemon_factory
-        self._classifier = classifier
-        self._url_generator = url_generator
 
     def parse(self) -> Pokemon:
         return self._generate_pokemon()
@@ -39,7 +33,6 @@ class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
     def _generate_pokemon(self) -> Pokemon:
         name = self._extract_name()
         types = self._extract_types()
-        categories = self._generate_categories(name)
 
         return self._pokemon_factory(
             id=self._extract_id(),
@@ -47,8 +40,6 @@ class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
             types=types,
             attacks=self._extract_attacks(types),
             is_shiny_available=self._extract_shiny(),
-            categories=categories,
-            url_api=self._generate_url_api(name, categories),
         )
 
     def _extract_id(self) -> int:
@@ -155,13 +146,3 @@ class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
             "span", class_="PokemonPageRenderers_ornamentIcon__ffCq5"
         )
         return len(shiny_element) == 2
-
-    def _generate_categories(self, poke_name: str) -> dict[str, bool]:
-        return self._classifier.classify(poke_name)
-
-    def _generate_url_api(
-        self,
-        poke_name: str,
-        categories: dict[str, bool]
-    ) -> str:
-        return self._url_generator.generate(poke_name, categories)
