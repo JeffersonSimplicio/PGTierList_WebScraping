@@ -4,7 +4,10 @@ from src.domain.services.html_adapter import HtmlAdapter
 
 
 class GoHubAttackExtractor:
-    def __init__(self, html_adapter: HtmlAdapter, ):
+    def __init__(
+        self,
+        html_adapter: HtmlAdapter,
+    ):
         self._html_adapter = html_adapter
 
     def extract(self, types: list[str]) -> list[PokeAttack]:
@@ -30,9 +33,7 @@ class GoHubAttackExtractor:
 
                     attacks.append(
                         PokeAttack(
-                            type_charged_attack,
-                            fast_attack,
-                            charged_attack
+                            type_charged_attack, fast_attack, charged_attack
                         )
                     )
                     if len(types) == 0:
@@ -41,34 +42,30 @@ class GoHubAttackExtractor:
                     continue
 
         if len(attacks) == 0:
-            tr = self._html_adapter.select_one(table_body, "tr:first-child")
-            if tr:
-                type_charged_attack = self._get_attack_type(tr, 3)
-                fast_attack = self._get_attack_name(tr, 2)
-                charged_attack = self._get_attack_name(tr, 3)
-                attacks.append(
-                    PokeAttack(
-                        type_charged_attack,
-                        fast_attack,
-                        charged_attack
-                    )
-                )
+            attacks = self._fallback_attack(table_body)
         return attacks
 
     def _get_attack_type(self, tr: Any, index: int) -> str:
         td_element = self._html_adapter.select(
-            f"td:nth-child({index}) a",
-            in_element=tr
+            f"td:nth-child({index}) a", in_element=tr
         )
-        img = self._html_adapter.select(
-            "img",
-            in_element=td_element
-        )
+        img = self._html_adapter.select("img", in_element=td_element)
         return self._html_adapter.get_attr("title", in_element=img).strip()
 
     def _get_attack_name(self, tr: Any, index: int) -> str:
         td_element = self._html_adapter.select(
-            f"td:nth-child({index}) a",
-            in_element=tr
+            f"td:nth-child({index}) a", in_element=tr
         )
         return self._html_adapter.get_text(td_element)
+
+    def _fallback_attack(self, table_body: list[Any]) -> list[PokeAttack]:
+        tr = self._html_adapter.select_one(table_body, "tr:first-child")
+
+        if not tr:
+            return []
+
+        type_charged_attack = self._get_attack_type(tr, 3)
+        fast_attack = self._get_attack_name(tr, 2)
+        charged_attack = self._get_attack_name(tr, 3)
+
+        return [PokeAttack(type_charged_attack, fast_attack, charged_attack)]
