@@ -68,4 +68,4 @@ class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
         shiny_element = self._html_adapter.find_all(
             "span", class_="PokemonPageRenderers_ornamentIcon__ffCq5"
         )
-        return len(shiny_element) == 2
+        return len(shiny_element) >= 2
