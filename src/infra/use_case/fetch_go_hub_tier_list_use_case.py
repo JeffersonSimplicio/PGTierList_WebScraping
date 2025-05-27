@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any
 from src.domain.entities.poke_link import PokeLink
 from src.domain.services.html_adapter import HtmlAdapter
 from src.domain.use_case.fetch_pokemon_list_by_tier_use_case import (
@@ -12,15 +12,13 @@ class FetchGoHubPokemonTierListUseCase(FetchPokemonListByTierUseCase):
     def __init__(
         self,
         html_adapter: HtmlAdapter,
-        poke_link_factory: Callable[[str, str], PokeLink],
     ) -> None:
         self._html_adapter = html_adapter
-        self._poke_link_factory = poke_link_factory
 
-    def parse(self) -> dict[str, list[dict[str, str]]]:
+    def parse(self) -> dict[str, list[PokeLink]]:
         return self._match_tiers_with_pokemon()
 
-    def _match_tiers_with_pokemon(self) -> dict[str, list[dict[str, str]]]:
+    def _match_tiers_with_pokemon(self) -> dict[str, list[PokeLink]]:
         dict_ranking = {}
         list_tier_name = self._extract_tier_names()
         list_ranking_tier = self._extract_tier_lists()
@@ -43,7 +41,7 @@ class FetchGoHubPokemonTierListUseCase(FetchPokemonListByTierUseCase):
             class_="best-attackers_grid__WYqUF"
         )
 
-    def _parse_tier(self, tier_html: Any) -> list[dict[str, str]]:
+    def _parse_tier(self, tier_html: Any) -> list[PokeLink]:
         tier_data = []
         ranking_tier = self._html_adapter.find_all(
             "li",
@@ -55,7 +53,7 @@ class FetchGoHubPokemonTierListUseCase(FetchPokemonListByTierUseCase):
             tier_data.append(poke_data)
         return tier_data
 
-    def _parse_pokemon(self, poke_cell: Any) -> dict[str, str]:
+    def _parse_pokemon(self, poke_cell: Any) -> PokeLink:
         link_element = self._html_adapter.find(
             "a",
             class_="PokemonCard_pokemonCard__jxCzI",
@@ -74,4 +72,4 @@ class FetchGoHubPokemonTierListUseCase(FetchPokemonListByTierUseCase):
 
         full_url = self.GOHUB_LINK_BASE + link
 
-        return self._poke_link_factory(name, full_url)
+        return PokeLink(name, full_url)
