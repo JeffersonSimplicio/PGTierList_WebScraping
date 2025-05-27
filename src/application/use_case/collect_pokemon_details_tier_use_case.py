@@ -22,15 +22,16 @@ class CollectPokemonDetailsByTierUseCase(
         )
         self._details_factory = details_factory
 
-    def execute(self):
+    def execute(self, max_workers: int = 10, retries: int = 3):
         result: dict[str, list[Pokemon]] = {}
 
-        with ThreadPoolExecutor(max_workers=10) as executor:
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
             for tier, poke_links in self._tiered_links.items():
                 future_to_index = {
                     executor.submit(
-                        self._details_factory.create,
-                        link.url
+                        self._safe_create_with_retry,
+                        url=link.url,
+                        retries=retries
                     ): idx
                     for idx, link in enumerate(poke_links)
                 }
@@ -53,3 +54,18 @@ class CollectPokemonDetailsByTierUseCase(
                 result[tier] = [p for p in ordered_pokemons if p is not None]
 
         return result
+
+    def _safe_create_with_retry(
+        self, url: str, retries: int
+    ) -> Optional[Pokemon]:
+        for attempt in range(1, retries + 1):
+            try:
+                return self._details_factory.create(url)
+            except Exception as e:
+                print(
+                    (
+                        f"[Tentativa {attempt}/{retries}] Falha ao buscar "
+                        f"'{url}': {e}"
+                    )
+                )
+        return None
