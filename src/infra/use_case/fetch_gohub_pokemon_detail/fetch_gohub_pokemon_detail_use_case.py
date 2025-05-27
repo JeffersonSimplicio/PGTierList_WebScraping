@@ -1,4 +1,3 @@
-from typing import Callable
 from src.domain.services.html_adapter import HtmlAdapter
 from src.domain.entities.pokemon import Pokemon
 from src.domain.entities.poke_attack import PokeAttack
@@ -10,24 +9,8 @@ from src.infra.use_case.fetch_gohub_pokemon_detail.\
 
 
 class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
-    def __init__(
-        self,
-        html_adapter: HtmlAdapter,
-        pokemon_factory: Callable[
-            [
-                int,
-                str,
-                list[str],
-                list[PokeAttack],
-                bool,
-                dict[str, bool],
-                str,
-            ],
-            Pokemon,
-        ],
-    ) -> None:
+    def __init__(self, html_adapter: HtmlAdapter) -> None:
         self._html_adapter = html_adapter
-        self._pokemon_factory = pokemon_factory
         self._attack_extractor = GoHubAttackExtractor(html_adapter)
 
     def parse(self) -> Pokemon:
@@ -37,7 +20,7 @@ class FetchGoHubPokemonDetailUseCase(FetchPokemonDetailUseCase):
         name = self._extract_name()
         types = self._extract_types()
 
-        return self._pokemon_factory(
+        return Pokemon(
             id=self._extract_id(),
             name=name,
             types=types,
