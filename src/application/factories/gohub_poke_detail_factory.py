@@ -22,7 +22,7 @@ from src.infra.use_case.fetch_gohub_pokemon_detail \
     )
 
 
-class GoHubPokeDetailFactory(Factory[dict[str, list[Pokemon]]]):
+class GoHubPokeDetailFactory(Factory[Pokemon]):
     def create(self, url: str):
         scraper = SeleniumHtmlScraper(url)
 
